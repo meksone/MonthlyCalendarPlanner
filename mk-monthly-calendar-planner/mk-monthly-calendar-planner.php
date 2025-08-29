@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name:       MK Monthly Calendar Planner
+ * Plugin Name:       mk-monthly-calendar-planner
  * Description:       A plugin to create and display monthly calendars with events using a shortcode.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            meksONE
  * Author URI:        https://meksone.com/
  * Text Domain:       mk-monthly-calendar-planner
@@ -14,19 +14,28 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-define( 'MCP_VERSION', '1.0.0' );
-define( 'MCP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'MCP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'MK_MCP_VERSION', '1.0.1' );
+define( 'MK_MCP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'MK_MCP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+
+/**
+ * Load plugin textdomain for translation.
+ */
+function mk_mcp_load_textdomain() {
+    load_plugin_textdomain( 'mk-monthly-calendar-planner', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+}
+add_action( 'plugins_loaded', 'mk_mcp_load_textdomain' );
+
 
 // Include required files
-require_once MCP_PLUGIN_DIR . 'includes/cpt.php';
-require_once MCP_PLUGIN_DIR . 'includes/meta-boxes.php';
-require_once MCP_PLUGIN_DIR . 'includes/shortcode.php';
+require_once MK_MCP_PLUGIN_DIR . 'includes/cpt.php';
+require_once MK_MCP_PLUGIN_DIR . 'includes/meta-boxes.php';
+require_once MK_MCP_PLUGIN_DIR . 'includes/shortcode.php';
 
 /**
  * Enqueue scripts and styles for the admin area.
  */
-function mcp_admin_enqueue_scripts($hook) {
+function mk_mcp_admin_enqueue_scripts($hook) {
     global $post_type;
     if ( ('post.php' == $hook || 'post-new.php' == $hook) && 'monthly_calendar' == $post_type ) {
         // Enqueue jQuery UI for drag and drop
@@ -36,41 +45,41 @@ function mcp_admin_enqueue_scripts($hook) {
 
         // Enqueue admin styles
         wp_enqueue_style(
-            'mcp-admin-style',
-            MCP_PLUGIN_URL . 'assets/css/admin-style.css',
+            'mk-mcp-admin-style',
+            MK_MCP_PLUGIN_URL . 'assets/css/admin-style.css',
             array(),
-            MCP_VERSION,
+            MK_MCP_VERSION,
             'all'
         );
 
         // Enqueue admin script
         wp_enqueue_script(
-            'mcp-admin-script',
-            MCP_PLUGIN_URL . 'assets/js/admin-script.js',
+            'mk-mcp-admin-script',
+            MK_MCP_PLUGIN_URL . 'assets/js/admin-script.js',
             array('jquery', 'jquery-ui-sortable', 'jquery-ui-droppable'),
-            MCP_VERSION,
+            MK_MCP_VERSION,
             true
         );
         
         // Pass data to script
-        wp_localize_script('mcp-admin-script', 'mcp_ajax', array(
+        wp_localize_script('mk-mcp-admin-script', 'mk_mcp_ajax', array(
             'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce'    => wp_create_nonce('mcp-nonce')
+            'nonce'    => wp_create_nonce('mk-mcp-nonce')
         ));
     }
 }
-add_action( 'admin_enqueue_scripts', 'mcp_admin_enqueue_scripts' );
+add_action( 'admin_enqueue_scripts', 'mk_mcp_admin_enqueue_scripts' );
 
 /**
  * Enqueue scripts and styles for the frontend.
  */
-function mcp_frontend_enqueue_scripts() {
+function mk_mcp_frontend_enqueue_scripts() {
     wp_enqueue_style(
-        'mcp-frontend-style',
-        MCP_PLUGIN_URL . 'assets/css/frontend-style.css',
+        'mk-mcp-frontend-style',
+        MK_MCP_PLUGIN_URL . 'assets/css/frontend-style.css',
         array(),
-        MCP_VERSION,
+        MK_MCP_VERSION,
         'all'
     );
 }
-add_action( 'wp_enqueue_scripts', 'mcp_frontend_enqueue_scripts' );
+add_action( 'wp_enqueue_scripts', 'mk_mcp_frontend_enqueue_scripts' );

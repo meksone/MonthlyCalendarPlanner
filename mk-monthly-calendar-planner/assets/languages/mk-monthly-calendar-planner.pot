@@ -1,0 +1,191 @@
+Copyright (C) 2025 meksONE
+This file is distributed under the same license as the mk-monthly-calendar-planner plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: mk-monthly-calendar-planner 1.0.1\n"
+"Report-Msgid-Bugs-To: https://www.google.com/search?q=https://wordpress.org/support/plugin/mk-monthly-calendar-planner\n"
+"Last-Translator: FULL NAME EMAIL@ADDRESS\n"
+"Language-Team: LANGUAGE LL@li.org\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-08-29 19:20+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: Poedit 3.4.2\n"
+"X-Domain: mk-monthly-calendar-planner\n"
+
+#: includes/cpt.php:14
+msgid "Monthly Calendars"
+msgstr ""
+
+#: includes/cpt.php:15
+msgid "Monthly Calendar"
+msgstr ""
+
+#: includes/cpt.php:17
+msgid "Calendar Archives"
+msgstr ""
+
+#: includes/cpt.php:18
+msgid "Calendar Attributes"
+msgstr ""
+
+#: includes/cpt.php:19
+msgid "Parent Calendar:"
+msgstr ""
+
+#: includes/cpt.php:20
+msgid "All Calendars"
+msgstr ""
+
+#: includes/cpt.php:21
+msgid "Add New Calendar"
+msgstr ""
+
+#: includes/cpt.php:22
+msgid "Add New"
+msgstr ""
+
+#: includes/cpt.php:23
+msgid "New Calendar"
+msgstr ""
+
+#: includes/cpt.php:24
+msgid "Edit Calendar"
+msgstr ""
+
+#: includes/cpt.php:25
+msgid "Update Calendar"
+msgstr ""
+
+#: includes/cpt.php:26
+msgid "View Calendar"
+msgstr ""
+
+#: includes/cpt.php:27
+msgid "View Calendars"
+msgstr ""
+
+#: includes/cpt.php:28
+msgid "Search Calendar"
+msgstr ""
+
+#: includes/cpt.php:29
+msgid "Not found"
+msgstr ""
+
+#: includes/cpt.php:30
+msgid "Not found in Trash"
+msgstr ""
+
+#: includes/cpt.php:31
+msgid "Featured Image"
+msgstr ""
+
+#: includes/cpt.php:32
+msgid "Set featured image"
+msgstr ""
+
+#: includes/cpt.php:33
+msgid "Remove featured image"
+msgstr ""
+
+#: includes/cpt.php:34
+msgid "Use as featured image"
+msgstr ""
+
+#: includes/cpt.php:35
+msgid "Insert into calendar"
+msgstr ""
+
+#: includes/cpt.php:36
+msgid "Uploaded to this calendar"
+msgstr ""
+
+#: includes/cpt.php:37
+msgid "Calendars list"
+msgstr ""
+
+#: includes/cpt.php:38
+msgid "Calendars list navigation"
+msgstr ""
+
+#: includes/cpt.php:39
+msgid "Filter calendars list"
+msgstr ""
+
+#: includes/cpt.php:43
+msgid "A post type for creating monthly calendars."
+msgstr ""
+
+#: includes/meta-boxes.php:14
+msgid "Calendar Settings & Items"
+msgstr ""
+
+#: includes/meta-boxes.php:40
+msgid "Month"
+msgstr ""
+
+#: includes/meta-boxes.php:49
+msgid "Year"
+msgstr ""
+
+#: includes/meta-boxes.php:54
+msgid "Loading Calendar..."
+msgstr ""
+
+#: includes/meta-boxes.php:171
+msgid "Mon"
+msgstr ""
+
+#: includes/meta-boxes.php:172
+msgid "Tue"
+msgstr ""
+
+#: includes/meta-boxes.php:173
+msgid "Wed"
+msgstr ""
+
+#: includes/meta-boxes.php:174
+msgid "Thu"
+msgstr ""
+
+#: includes/meta-boxes.php:175
+msgid "Fri"
+msgstr ""
+
+#: includes/meta-boxes.php:176
+msgid "Sat"
+msgstr ""
+
+#: includes/meta-boxes.php:177
+msgid "Sun"
+msgstr ""
+
+#: includes/meta-boxes.php:196
+msgid "Duplicate Item"
+msgstr ""
+
+#: includes/meta-boxes.php:196
+msgid "Delete Item"
+msgstr ""
+
+#: includes/meta-boxes.php:198
+msgid "Title"
+msgstr ""
+
+#: includes/meta-boxes.php:199
+msgid "Text"
+msgstr ""
+
+#: includes/meta-boxes.php:211
+msgid "Add Item"
+msgstr ""
+
+#: includes/shortcode.php:20
+msgid "Invalid calendar ID provided."
+msgstr ""
+
+#: includes/shortcode.php:38
+msgid "Calendar is not configured correctly (missing month or year)."
+msgstr ""
