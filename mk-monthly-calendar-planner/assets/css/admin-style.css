@@ -1,0 +1,156 @@
+/* General Meta Box Styling */
+.mcp-meta-box-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.mcp-settings-fields {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    background: #f9f9f9;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.mcp-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.mcp-field label {
+    font-weight: bold;
+}
+.mcp-field select, .mcp-field input {
+    min-width: 150px;
+}
+
+/* Calendar Grid Styling */
+.mcp-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+}
+
+.mcp-day-header {
+    background: #f0f0f1;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px;
+    border-bottom: 1px solid #ccd0d4;
+}
+
+.mcp-day {
+    border-right: 1px solid #ccd0d4;
+    border-bottom: 1px solid #ccd0d4;
+    min-height: 150px;
+    padding: 5px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.mcp-day:nth-child(7n) {
+    border-right: none;
+}
+
+.mcp-day.mcp-day-empty {
+    background: #f9f9f9;
+}
+
+.mcp-day-number {
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: right;
+    padding-right: 5px;
+    color: #555;
+}
+
+.mcp-day-items-wrapper {
+    flex-grow: 1;
+    min-height: 80px;
+}
+
+.mcp-add-item-btn {
+    margin-top: auto; /* Pushes button to the bottom */
+    width: 100%;
+    margin-top: 8px;
+}
+
+/* Calendar Item Styling */
+.mcp-item {
+    background: #fff;
+    border: 1px solid #999;
+    border-radius: 3px;
+    padding: 5px;
+    margin-bottom: 5px;
+    cursor: grab;
+}
+.mcp-item:active {
+    cursor: grabbing;
+}
+
+.mcp-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+
+.mcp-item-title-preview {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+}
+
+
+.mcp-item-actions button {
+    cursor: pointer;
+    background: #eee;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    line-height: 20px;
+    text-align: center;
+    font-weight: bold;
+    padding: 0;
+}
+.mcp-item-actions .mcp-delete-item {
+    color: #d63638;
+}
+
+.mcp-item-content {
+    display: none; /* Hidden by default, toggled by JS */
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #ccc;
+}
+
+.mcp-item-content input,
+.mcp-item-content textarea {
+    width: 100%;
+    margin-bottom: 5px;
+}
+.mcp-item-content textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.mcp-item-placeholder {
+    height: 40px;
+    background: #f0f8ff;
+    border: 2px dashed #add8e6;
+    margin-bottom: 5px;
+}
+
+.mcp-loader {
+    text-align: center;
+    padding: 50px;
+    font-size: 1.2em;
+    color: #555;
+}
