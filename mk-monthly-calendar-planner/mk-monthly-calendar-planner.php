@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       mk-monthly-calendar-planner
  * Description:       A plugin to create and display monthly calendars with events using a shortcode.
- * Version:           1.0.7
+ * Version:           1.0.8
  * Author:            meksONE
  * Author URI:        https://meksone.com/
  * Text Domain:       mk-monthly-calendar-planner
@@ -14,7 +14,7 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-define( 'MK_MCP_VERSION', '1.0.7' );
+define( 'MK_MCP_VERSION', '1.0.8' );
 define( 'MK_MCP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MK_MCP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -32,6 +32,7 @@ require_once MK_MCP_PLUGIN_DIR . 'includes/cpt.php';
 require_once MK_MCP_PLUGIN_DIR . 'includes/meta-boxes.php';
 require_once MK_MCP_PLUGIN_DIR . 'includes/shortcode.php';
 require_once MK_MCP_PLUGIN_DIR . 'includes/templates.php';
+require_once MK_MCP_PLUGIN_DIR . 'includes/admin-settings.php';
 
 /**
  * Enqueue scripts and styles for the admin area.
@@ -57,14 +58,69 @@ function mk_mcp_admin_enqueue_scripts($hook) {
             )
         ));
     }
+
+    // Enqueue color picker for our settings page
+    if ('monthly_calendar_page_mk-mcp-settings' == $hook) {
+        wp_enqueue_style('wp-color-picker');
+        wp_enqueue_script('mk-mcp-settings-script', MK_MCP_PLUGIN_URL . 'assets/js/admin-settings.js', ['wp-color-picker'], MK_MCP_VERSION, true);
+    }
 }
 add_action( 'admin_enqueue_scripts', 'mk_mcp_admin_enqueue_scripts' );
+
+/**
+ * Generates dynamic CSS based on user settings.
+ *
+ * @return string The generated CSS.
+ */
+function mk_mcp_generate_dynamic_css() {
+    $options = get_option('mk_mcp_style_settings');
+    if (empty($options)) {
+        return '';
+    }
+
+    $css = '';
+
+    // Helper for border styles
+    $border_css = function($prefix, $selector) use ($options, &$css) {
+        if (!empty($options[$prefix.'_width']) || !empty($options[$prefix.'_style']) || !empty($options[$prefix.'_color'])) {
+            $width = !empty($options[$prefix.'_width']) ? absint($options[$prefix.'_width']) . 'px' : '0';
+            $style = !empty($options[$prefix.'_style']) ? esc_attr($options[$prefix.'_style']) : 'none';
+            $color = !empty($options[$prefix.'_color']) ? esc_attr($options[$prefix.'_color']) : 'transparent';
+            $css .= "$selector { border: $width $style $color; }\n";
+        }
+    };
+
+    // General View
+    $border_css('main_border', '.mk-mcp-calendar-grid');
+    if (!empty($options['day_bg_color'])) { $css .= ".mk-mcp-day { background-color: " . esc_attr($options['day_bg_color']) . "; }\n"; }
+    if (!empty($options['day_padding'])) { $css .= ".mk-mcp-day { padding: " . absint($options['day_padding']) . "px; }\n"; }
+    if (isset($options['day_margin']) && $options['day_margin'] !== '') { $css .= ".mk-mcp-calendar-grid { gap: " . absint($options['day_margin']) . "px; }\n"; }
+
+    // Table View
+    if (!empty($options['table_header_bg_color'])) { $css .= ".mk-mcp-table-day-header { background-color: " . esc_attr($options['table_header_bg_color']) . "; }\n"; }
+    if (!empty($options['table_header_padding'])) { $css .= ".mk-mcp-table-day-header { padding: " . absint($options['table_header_padding']) . "px; }\n"; }
+    if (isset($options['table_header_margin']) && $options['table_header_margin'] !== '') { $css .= ".mk-mcp-table-day-row { margin-bottom: " . absint($options['table_header_margin']) . "px; }\n"; }
+    $border_css('table_header_border', '.mk-mcp-table-day-header');
+
+    // Items
+    if (!empty($options['item_bg_color'])) { $css .= ".mk-mcp-item { background-color: " . esc_attr($options['item_bg_color']) . "; }\n"; }
+    $border_css('item_border', '.mk-mcp-item');
+    if (!empty($options['item_text_color'])) { $css .= ".mk-mcp-item, .mk-mcp-item .mk-mcp-item-title { color: " . esc_attr($options['item_text_color']) . "; }\n"; }
+    if (!empty($options['item_font_family'])) { $css .= ".mk-mcp-frontend-calendar-wrapper { font-family: " . esc_attr($options['item_font_family']) . "; }\n"; }
+
+    return $css;
+}
 
 /**
  * Enqueue scripts and styles for the frontend.
  */
 function mk_mcp_frontend_enqueue_scripts() {
     wp_enqueue_style('mk-mcp-frontend-style', MK_MCP_PLUGIN_URL . 'assets/css/frontend-style.css', array(), MK_MCP_VERSION, 'all');
+
+    $dynamic_css = mk_mcp_generate_dynamic_css();
+    if (!empty($dynamic_css)) {
+        wp_add_inline_style('mk-mcp-frontend-style', $dynamic_css);
+    }
 }
 add_action( 'wp_enqueue_scripts', 'mk_mcp_frontend_enqueue_scripts' );
 
