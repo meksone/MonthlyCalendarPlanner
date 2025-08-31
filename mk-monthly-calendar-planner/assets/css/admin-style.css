@@ -67,6 +67,9 @@
     border-radius: 4px;
     padding: 15px;
     align-self: flex-start; /* Aligns to the top */
+    position: -webkit-sticky; /* For Safari */
+    position: sticky;
+    top: 50px; /* Adjust based on WP admin bar height + spacing */
 }
 
 #mk-mcp-templates-sidebar h3 {
