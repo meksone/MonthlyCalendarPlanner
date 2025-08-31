@@ -3,16 +3,17 @@
     max-width: 1200px;
     margin: 2em auto;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    overflow-x: hidden; /* Prevent horizontal scroll on smaller screens */
 }
 
 .mk-mcp-calendar-title {
     text-align: center;
     margin-bottom: 1em;
-    font-size: 2em;
+    font-size: 2.2em;
     color: #333;
 }
 
-/* Calendar Grid */
+/* Calendar Grid - Desktop First */
 .mk-mcp-calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -27,14 +28,17 @@
     padding: 0.75em 0.5em;
     border-right: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;
-    font-size: 0.9em;
+    font-size: 1em;
 }
 
 .mk-mcp-day {
     border-right: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;
-    padding: 8px;
-    min-height: 120px;
+    padding: 10px;
+    min-height: 140px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .mk-mcp-day.mk-mcp-day-empty {
@@ -43,20 +47,35 @@
 
 .mk-mcp-day-number {
     font-weight: bold;
-    font-size: 1.1em;
+    font-size: 1.2em;
     color: #2c3e50;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    text-align: right;
+}
+
+/* Day name is hidden by default on larger screens */
+.mk-mcp-day-name {
+    display: none;
+}
+
+.mk-mcp-day-items-wrapper {
+    flex-grow: 1;
 }
 
 /* Calendar Items */
 .mk-mcp-item {
     background: #ffffff;
     border: 1px solid #e0e0e0;
-    border-left: 4px solid #3498db;
+    border-left: 5px solid #3498db;
     border-radius: 4px;
-    padding: 10px;
-    margin-bottom: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    padding: 12px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.07);
+    transition: box-shadow 0.3s ease;
+}
+
+.mk-mcp-item:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .mk-mcp-item-title {
@@ -76,14 +95,24 @@
 }
 
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* Tablet Responsiveness */
+@media (max-width: 900px) {
+    .mk-mcp-calendar-title {
+        font-size: 1.8em;
+    }
+    .mk-mcp-day {
+        min-height: 120px;
+        padding: 8px;
+    }
     .mk-mcp-day-header {
-        font-size: 0.8em;
-        padding: 0.5em 0.2em;
+        font-size: 0.9em;
     }
     .mk-mcp-day-number {
         font-size: 1em;
+    }
+    .mk-mcp-item {
+        padding: 8px;
+        border-left-width: 4px;
     }
     .mk-mcp-item-title {
         font-size: 0.9em;
@@ -93,21 +122,75 @@
     }
 }
 
-@media (max-width: 480px) {
+
+/* Mobile Responsiveness - Switch to List View */
+@media (max-width: 767px) {
     .mk-mcp-calendar-title {
-        font-size: 1.5em;
+        font-size: 1.6em;
     }
+
+    /* Hide day headers and switch to block layout */
     .mk-mcp-day-header {
-       writing-mode: vertical-rl;
-       text-orientation: mixed;
-       padding: 0.5em;
+        display: none;
     }
+    .mk-mcp-calendar-grid {
+        display: block;
+        border-left: none;
+    }
+
+    /* Hide empty days to save space */
+    .mk-mcp-day.mk-mcp-day-empty {
+        display: none;
+    }
+
     .mk-mcp-day {
-        min-height: 100px;
-        padding: 4px;
+        display: block;
+        min-height: 0;
+        width: 100%;
+        border-right: none; /* remove grid border */
+        padding: 0;
     }
-     .mk-mcp-item {
-        padding: 6px;
-        border-left-width: 3px;
+    /* Add top border to all but the first day */
+    .mk-mcp-day + .mk-mcp-day {
+         border-top: 1px solid #e0e0e0;
+    }
+
+
+    /* Style day number as a header for the list item */
+    .mk-mcp-day-number {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+        background: #f7f7f7;
+        padding: 10px 15px;
+        margin-bottom: 0;
+        font-size: 1.1em;
+        font-weight: 600;
+        border-bottom: 1px solid #e0e0e0;
+    }
+     .mk-mcp-day:last-child .mk-mcp-day-number{
+        border-bottom: none;
+    }
+
+    /* Display and style the day name on mobile */
+    .mk-mcp-day-name {
+        display: inline;
+        font-size: 0.9em;
+        font-weight: 400;
+        color: #555;
+        margin-left: 3px;
+    }
+
+    /* Add padding to the items wrapper instead of the day */
+    .mk-mcp-day-items-wrapper {
+        padding: 15px;
+    }
+    
+    .mk-mcp-item {
+        margin-bottom: 12px;
+    }
+    .mk-mcp-day-items-wrapper .mk-mcp-item:last-child {
+        margin-bottom: 0;
     }
 }
