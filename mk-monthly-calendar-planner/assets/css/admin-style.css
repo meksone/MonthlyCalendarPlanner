@@ -80,8 +80,14 @@
 
 /* Admin Table Styling */
 .mk-mcp-admin-table th.mk-mcp-table-day-header { width: 10%; }
-.mk-mcp-admin-table th.mk-mcp-table-day-label { vertical-align: top; padding-top: 12px; }
-.mk-mcp-admin-table td { min-height: 100px; }
+.mk-mcp-admin-table th.mk-mcp-table-day-label { vertical-align: middle; padding-left: 10px; }
+.mk-mcp-admin-table td { min-height: 100px; vertical-align: top; padding: 8px; }
+.mk-mcp-add-item-btn-table {
+    display: block;
+    margin: 8px auto 0;
+    width: calc(100% - 10px);
+}
+
 
 /* Calendar Item Styling (Shared) */
 .mk-mcp-item {
