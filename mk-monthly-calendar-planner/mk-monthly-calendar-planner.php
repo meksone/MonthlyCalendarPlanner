@@ -31,13 +31,14 @@ add_action( 'plugins_loaded', 'mk_mcp_load_textdomain' );
 require_once MK_MCP_PLUGIN_DIR . 'includes/cpt.php';
 require_once MK_MCP_PLUGIN_DIR . 'includes/meta-boxes.php';
 require_once MK_MCP_PLUGIN_DIR . 'includes/shortcode.php';
+require_once MK_MCP_PLUGIN_DIR . 'includes/templates.php';
 
 /**
  * Enqueue scripts and styles for the admin area.
  */
 function mk_mcp_admin_enqueue_scripts($hook) {
     global $post_type;
-    if ( ('post.php' == $hook || 'post-new.php' == $hook) && 'monthly_calendar' == $post_type ) {
+    if ( ('post.php' == $hook || 'post-new.php' == $hook) && in_array($post_type, ['monthly_calendar', 'mcp_template']) ) {
         // Enqueue jQuery UI for drag and drop
         wp_enqueue_script('jquery-ui-sortable');
         wp_enqueue_script('jquery-ui-draggable');
@@ -56,7 +57,7 @@ function mk_mcp_admin_enqueue_scripts($hook) {
         wp_enqueue_script(
             'mk-mcp-admin-script',
             MK_MCP_PLUGIN_URL . 'assets/js/admin-script.js',
-            array('jquery', 'jquery-ui-sortable', 'jquery-ui-droppable'),
+            array('jquery', 'jquery-ui-sortable', 'jquery-ui-draggable', 'jquery-ui-droppable'),
             MK_MCP_VERSION,
             true
         );
@@ -83,3 +84,4 @@ function mk_mcp_frontend_enqueue_scripts() {
     );
 }
 add_action( 'wp_enqueue_scripts', 'mk_mcp_frontend_enqueue_scripts' );
+
