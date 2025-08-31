@@ -53,6 +53,7 @@ function mk_mcp_admin_enqueue_scripts($hook) {
                 'view_change_warning' => __('Switching views may alter your item layout, as items from multiple columns will be merged into one. Do you want to proceed?', 'mk-monthly-calendar-planner'),
                 'proceed' => __('Proceed', 'mk-monthly-calendar-planner'),
                 'cancel' => __('Cancel', 'mk-monthly-calendar-planner'),
+                'delete_confirm' => __('Are you sure you want to delete this item?', 'mk-monthly-calendar-planner'),
             )
         ));
     }

@@ -54,6 +54,10 @@ msgstr ""
 msgid "All Calendars"
 msgstr ""
 
+#: mk-monthly-calendar-planner.php:83
+msgid "Are you sure you want to delete this item?"
+msgstr ""
+
 #: includes/cpt.php:18
 msgid "Calendar Archives"
 msgstr ""
@@ -82,7 +86,7 @@ msgstr ""
 msgid "Calendars list navigation"
 msgstr ""
 
-#: includes/meta-boxes.php:97 includes/meta-boxes.php:243
+#: includes/meta-boxes.php:97 mk-monthly-calendar-planner.php:82
 msgid "Cancel"
 msgstr ""
 
@@ -246,7 +250,7 @@ msgctxt "Post Type Singular Name"
 msgid "Template"
 msgstr ""
 
-#: includes/meta-boxes.php:98
+#: includes/meta-boxes.php:98 mk-monthly-calendar-planner.php:81
 msgid "Proceed"
 msgstr ""
 
@@ -274,8 +278,7 @@ msgstr ""
 msgid "Sun"
 msgstr ""
 
-#: includes/meta-boxes.php:95
-#: mk-monthly-calendar-planner.php:82
+#: includes/meta-boxes.php:95 mk-monthly-calendar-planner.php:80
 msgid ""
 "Switching views may alter your item layout, as items from multiple columns "
 "will be merged into one. Do you want to proceed?"

@@ -55,6 +55,10 @@ msgstr "Aggiungerne uno?"
 msgid "All Calendars"
 msgstr "Tutti i Calendari"
 
+#: mk-monthly-calendar-planner.php:83
+msgid "Are you sure you want to delete this item?"
+msgstr "Sei sicuro di voler eliminare questo elemento?"
+
 #: includes/cpt.php:18
 msgid "Calendar Archives"
 msgstr "Archivi Calendario"
@@ -83,7 +87,7 @@ msgstr "Elenco Calendari"
 msgid "Calendars list navigation"
 msgstr "Navigazione elenco calendari"
 
-#: includes/meta-boxes.php:97 includes/meta-boxes.php:243
+#: includes/meta-boxes.php:97 mk-monthly-calendar-planner.php:82
 msgid "Cancel"
 msgstr "Annulla"
 
@@ -247,7 +251,7 @@ msgctxt "Post Type Singular Name"
 msgid "Template"
 msgstr "Modello"
 
-#: includes/meta-boxes.php:98
+#: includes/meta-boxes.php:98 mk-monthly-calendar-planner.php:81
 msgid "Proceed"
 msgstr "Procedi"
 
@@ -275,7 +279,7 @@ msgstr "Imposta immagine in evidenza"
 msgid "Sun"
 msgstr "Dom"
 
-#: includes/meta-boxes.php:95 mk-monthly-calendar-planner.php:82
+#: includes/meta-boxes.php:95 mk-monthly-calendar-planner.php:80
 msgid ""
 "Switching views may alter your item layout, as items from multiple columns "
 "will be merged into one. Do you want to proceed?"
