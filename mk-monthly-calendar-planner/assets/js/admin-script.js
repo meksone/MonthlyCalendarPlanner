@@ -94,7 +94,7 @@ jQuery(document).ready(function($) {
                     <span class="mk-mcp-item-title-preview">${escTitle}</span>
                     <div class="mk-mcp-item-actions"><button type="button" class="mk-mcp-duplicate-item">D</button><button type="button" class="mk-mcp-delete-item">X</button></div>
                 </div>
-                <div class="mk-mcp-item-content" style="display: block;"><input type="text" class="mk-mcp-item-title" placeholder="Title" value="${escTitle}"><textarea class="mk-mcp-item-text" placeholder="Text">${escText}</textarea></div>
+                <div class="mk-mcp-item-content" style="display: none;"><input type="text" class="mk-mcp-item-title" placeholder="Title" value="${escTitle}"><textarea class="mk-mcp-item-text" placeholder="Text">${escText}</textarea></div>
             </div>`;
     };
     
