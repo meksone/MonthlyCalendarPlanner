@@ -1,3 +1,8 @@
+/**
+ * Admin Styles for Monthly Calendar Planner
+ * @version 1.0.3
+ */
+
 /* General Meta Box Styling */
 .mk-mcp-meta-box-wrapper {
     display: flex;
@@ -61,6 +66,7 @@
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 15px;
+    align-self: flex-start; /* Aligns to the top */
 }
 
 #mk-mcp-templates-sidebar h3 {
