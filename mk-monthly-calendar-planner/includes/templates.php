@@ -87,6 +87,23 @@ function mk_mcp_save_template_meta_box_data($post_id) {
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
     if (isset($_POST['post_type']) && 'mcp_template' == $_POST['post_type'] && !current_user_can('edit_post', $post_id)) return;
 
+    $post = get_post($post_id);
+    $meta_has_changed = false;
+
+    if (wp_revisions_enabled($post)) {
+        $meta_keys = ['_mk_mcp_item_title', '_mk_mcp_item_text'];
+        foreach ($meta_keys as $meta_key) {
+            $old_value = get_post_meta($post_id, $meta_key, true);
+            $post_key = str_replace('_mk_mcp_', 'mk_mcp_', $meta_key);
+            $new_value_raw = isset($_POST[$post_key]) ? $_POST[$post_key] : null;
+
+            if ( (string) $old_value !== (string) $new_value_raw ) {
+                $meta_has_changed = true;
+                break;
+            }
+        }
+    }
+
     if (isset($_POST['mk_mcp_item_title'])) {
         update_post_meta($post_id, '_mk_mcp_item_title', sanitize_text_field($_POST['mk_mcp_item_title']));
     }
@@ -94,20 +111,13 @@ function mk_mcp_save_template_meta_box_data($post_id) {
         update_post_meta($post_id, '_mk_mcp_item_text', sanitize_textarea_field($_POST['mk_mcp_item_text']));
     }
 
-    // Now, sync this saved data with the latest revision.
-    $revisions = wp_get_post_revisions($post_id);
-    if (!empty($revisions)) {
-        $latest_revision = array_shift($revisions);
-        $revision_id = $latest_revision->ID;
-
-        $meta_keys = mk_mcp_get_revisioned_meta_keys();
-        foreach ($meta_keys as $meta_key) {
-            $meta_value = get_post_meta($post_id, $meta_key, true);
-            if (false !== $meta_value) {
-                update_metadata('post', $revision_id, $meta_key, $meta_value);
-            }
-        }
+    // If meta has changed, create a new revision.
+    if ($meta_has_changed) {
+        wp_save_post_revision($post_id);
     }
+
+    // Sync meta data to the latest revision.
+    mk_mcp_sync_meta_to_latest_revision($post_id);
 }
-add_action('save_post_mcp_template', 'mk_mcp_save_template_meta_box_data');
+add_action('save_post_mcp_template', 'mk_mcp_save_template_meta_box_data', 10, 1);
 

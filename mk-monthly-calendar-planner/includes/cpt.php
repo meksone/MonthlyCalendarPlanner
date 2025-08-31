@@ -1,7 +1,7 @@
 <?php
 /**
  * Custom Post Type registration for Monthly Calendar Planner
- * @version 1.0.5
+ * @version 1.0.7
  */
 
 // If this file is called directly, abort.

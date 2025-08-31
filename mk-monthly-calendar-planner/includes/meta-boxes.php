@@ -106,6 +106,44 @@ function mk_mcp_save_meta_box_data($post_id) {
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
     if (isset($_POST['post_type']) && 'monthly_calendar' == $_POST['post_type'] && !current_user_can('edit_post', $post_id)) return;
 
+    $post = get_post($post_id);
+    $meta_has_changed = false;
+
+    if (wp_revisions_enabled($post)) {
+        $meta_keys = mk_mcp_get_revisioned_meta_keys();
+        foreach ($meta_keys as $meta_key) {
+            $old_value = get_post_meta($post_id, $meta_key, true);
+            $new_value_raw = null;
+
+            $post_key_map = [
+                '_mk_mcp_month'          => 'mk_mcp_month',
+                '_mk_mcp_year'           => 'mk_mcp_year',
+                '_mk_mcp_calendar_items' => 'mk_mcp_calendar_items_json',
+                '_mk_mcp_view_mode'      => 'mk_mcp_view_mode',
+                '_mk_mcp_column_count'   => 'mk_mcp_column_count',
+                '_mk_mcp_column_names'   => 'mk_mcp_column_names',
+            ];
+
+            if (!isset($post_key_map[$meta_key])) continue;
+
+            $post_key = $post_key_map[$meta_key];
+
+            if (isset($_POST[$post_key])) {
+                $new_value_raw = $_POST[$post_key];
+                if ($meta_key === '_mk_mcp_calendar_items') {
+                     $new_value_raw = wp_unslash($new_value_raw);
+                } elseif ($meta_key === '_mk_mcp_column_names' && is_array($new_value_raw)) {
+                     $new_value_raw = wp_json_encode(array_map('sanitize_text_field', $new_value_raw));
+                }
+            }
+
+            if ( (string) $old_value !== (string) $new_value_raw ) {
+                $meta_has_changed = true;
+                break;
+            }
+        }
+    }
+
     // Save all the meta fields
     $fields = ['_mk_mcp_month', '_mk_mcp_year', '_mk_mcp_view_mode', '_mk_mcp_column_count'];
     foreach ($fields as $field_key) {
@@ -121,29 +159,22 @@ function mk_mcp_save_meta_box_data($post_id) {
     }
 
     if (isset($_POST['mk_mcp_calendar_items_json'])) {
-        $json_data = stripslashes($_POST['mk_mcp_calendar_items_json']);
+        $json_data = wp_unslash($_POST['mk_mcp_calendar_items_json']);
         $data = json_decode($json_data, true);
         if (json_last_error() === JSON_ERROR_NONE) {
             update_post_meta($post_id, '_mk_mcp_calendar_items', wp_json_encode($data));
         }
     }
 
-    // Now, sync this saved data with the latest revision.
-    $revisions = wp_get_post_revisions($post_id);
-    if (!empty($revisions)) {
-        $latest_revision = array_shift($revisions);
-        $revision_id = $latest_revision->ID;
-
-        $meta_keys = mk_mcp_get_revisioned_meta_keys();
-        foreach ($meta_keys as $meta_key) {
-            $meta_value = get_post_meta($post_id, $meta_key, true);
-            if (false !== $meta_value) {
-                update_metadata('post', $revision_id, $meta_key, $meta_value);
-            }
-        }
+    // If meta has changed, create a new revision.
+    if ($meta_has_changed) {
+        wp_save_post_revision($post_id);
     }
+
+    // Sync meta data to the latest revision.
+    mk_mcp_sync_meta_to_latest_revision($post_id);
 }
-add_action('save_post_monthly_calendar', 'mk_mcp_save_meta_box_data');
+add_action('save_post_monthly_calendar', 'mk_mcp_save_meta_box_data', 10, 1);
 
 
 function mk_mcp_convert_data_to_v2_format($items) {
@@ -164,14 +195,14 @@ function mk_mcp_get_admin_builder_view() {
     $month = isset($_POST['month']) ? intval($_POST['month']) : 0;
     $year = isset($_POST['year']) ? intval($_POST['year']) : 0;
     $view_mode = isset($_POST['view_mode']) ? sanitize_text_field($_POST['view_mode']) : 'calendar';
-    $items_json = isset($_POST['items']) ? stripslashes($_POST['items']) : '[]';
+    $items_json = isset($_POST['items']) ? wp_unslash($_POST['items']) : '[]';
     $items_data = json_decode($items_json, true);
     $items_data = mk_mcp_convert_data_to_v2_format($items_data);
     if (!$month || !$year) wp_send_json_error('Invalid month or year.');
     ob_start();
     if ($view_mode === 'table') {
         $column_count = isset($_POST['column_count']) ? intval($_POST['column_count']) : 4;
-        $column_names_json = isset($_POST['column_names']) ? stripslashes($_POST['column_names']) : '[]';
+        $column_names_json = isset($_POST['column_names']) ? wp_unslash($_POST['column_names']) : '[]';
         $column_names = json_decode($column_names_json, true);
         mk_mcp_render_table_grid_admin($month, $year, $items_data, $column_count, $column_names);
     } else {
