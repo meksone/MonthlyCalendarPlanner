@@ -5,7 +5,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-31 16:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Last-Translator: FULL NAME EMAIL@ADDRESS\n"
 "Language-Team: \n"
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
@@ -82,6 +82,10 @@ msgstr ""
 msgid "Calendars list navigation"
 msgstr ""
 
+#: includes/meta-boxes.php:97 includes/meta-boxes.php:243
+msgid "Cancel"
+msgstr ""
+
 #: includes/meta-boxes.php:56
 msgid "Column Names"
 msgstr ""
@@ -144,6 +148,10 @@ msgstr ""
 
 #: includes/templates.php:70
 msgid "Item Title"
+msgstr ""
+
+#: includes/meta-boxes.php:94
+msgid "Layout Change Warning"
 msgstr ""
 
 #: includes/meta-boxes.php:62
@@ -238,6 +246,10 @@ msgctxt "Post Type Singular Name"
 msgid "Template"
 msgstr ""
 
+#: includes/meta-boxes.php:98
+msgid "Proceed"
+msgstr ""
+
 #: includes/cpt.php:34
 msgid "Remove featured image"
 msgstr ""
@@ -260,6 +272,13 @@ msgstr ""
 
 #: includes/meta-boxes.php:158
 msgid "Sun"
+msgstr ""
+
+#: includes/meta-boxes.php:95
+#: mk-monthly-calendar-planner.php:82
+msgid ""
+"Switching views may alter your item layout, as items from multiple columns "
+"will be merged into one. Do you want to proceed?"
 msgstr ""
 
 #: includes/meta-boxes.php:54
