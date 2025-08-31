@@ -1,7 +1,7 @@
 <?php
 /**
  * Main Meta Box for Monthly Calendar Planner
- * @version 1.0.3
+ * @version 1.0.4
  */
 
 // If this file is called directly, abort.
@@ -79,6 +79,21 @@ function mk_mcp_render_meta_box_content($post) {
         </div>
         
         <input type="hidden" name="mk_mcp_calendar_items_json" id="mk_mcp_calendar_items_json" value="<?php echo esc_attr($calendar_items); ?>" />
+
+        <!-- View Switcher Modal -->
+        <div id="mk-mcp-view-switcher-modal-overlay" class="mk-mcp-modal-overlay">
+            <div class="mk-mcp-modal">
+                <div class="mk-mcp-modal-content">
+                    <h3><?php _e('Layout Change Warning', 'mk-monthly-calendar-planner'); ?></h3>
+                    <p><?php _e('Switching views may alter your item layout, as items from multiple columns will be merged into one. Do you want to proceed?', 'mk-monthly-calendar-planner'); ?></p>
+                </div>
+                <div class="mk-mcp-modal-buttons">
+                    <button type="button" class="button" id="mk-mcp-cancel-switch"><?php _e('Cancel', 'mk-monthly-calendar-planner'); ?></button>
+                    <button type="button" class="button button-primary" id="mk-mcp-confirm-switch"><?php _e('Proceed', 'mk-monthly-calendar-planner'); ?></button>
+                </div>
+            </div>
+        </div>
+
     </div>
     <?php
 }
@@ -217,4 +232,3 @@ function mk_mcp_render_frontend_table($month, $year, $items, $column_count, $col
     }
     echo '</div>';
 }
-
