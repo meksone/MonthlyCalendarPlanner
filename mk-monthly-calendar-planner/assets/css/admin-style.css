@@ -1,6 +1,6 @@
 /**
  * Admin Styles for Monthly Calendar Planner
- * @version 1.0.4
+ * @version 1.0.5
  */
 
 /* General Meta Box Styling */
@@ -208,7 +208,7 @@
 
 /* --- View Switcher Modal --- */
 .mk-mcp-modal-overlay {
-    display: none;
+    display: none; /* Changed to flex by JS */
     position: fixed;
     top: 0;
     left: 0;
@@ -243,3 +243,4 @@
     border-top: 1px solid #eee;
     padding-top: 15px;
 }
+
