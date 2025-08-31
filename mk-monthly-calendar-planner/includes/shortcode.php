@@ -27,21 +27,18 @@ function mk_mcp_register_shortcode( $atts ) {
     }
     
     // Check post status
-    if (get_post_status($post_id) !== 'publish') {
-         if (!current_user_can('edit_post', $post_id)) {
-            return ''; // Don't show non-published calendars to public
-         }
+    if (get_post_status($post_id) !== 'publish' && !current_user_can('edit_post', $post_id)) {
+        return ''; // Don't show non-published calendars to public
     }
 
     $month = get_post_meta( $post_id, '_mk_mcp_month', true );
     $year = get_post_meta( $post_id, '_mk_mcp_year', true );
     $items_json = get_post_meta( $post_id, '_mk_mcp_calendar_items', true );
     $items = json_decode( $items_json, true );
+    $items = mk_mcp_convert_data_to_v2_format($items); // Ensure data is in new format
 
-    if ( json_last_error() !== JSON_ERROR_NONE ) {
-        $items = [];
-    }
-
+    $view_mode = get_post_meta( $post_id, '_mk_mcp_view_mode', true ) ?: 'calendar';
+    
     if ( ! $month || ! $year ) {
         return '<p>' . __( 'Calendar is not configured correctly (missing month or year).', 'mk-monthly-calendar-planner' ) . '</p>';
     }
@@ -50,7 +47,16 @@ function mk_mcp_register_shortcode( $atts ) {
     ?>
     <div class="mk-mcp-frontend-calendar-wrapper">
         <h2 class="mk-mcp-calendar-title"><?php echo esc_html( get_the_title( $post_id ) ); ?></h2>
-        <?php mk_mcp_render_calendar_grid( $month, $year, $items, false ); ?>
+        <?php 
+        if ($view_mode === 'table') {
+            $column_count = get_post_meta( $post_id, '_mk_mcp_column_count', true ) ?: 4;
+            $column_names_json = get_post_meta( $post_id, '_mk_mcp_column_names', true );
+            $column_names = !empty($column_names_json) ? json_decode($column_names_json, true) : [];
+            mk_mcp_render_frontend_table($month, $year, $items, $column_count, $column_names);
+        } else {
+            mk_mcp_render_calendar_grid( $month, $year, $items, false ); 
+        }
+        ?>
     </div>
     <?php
 

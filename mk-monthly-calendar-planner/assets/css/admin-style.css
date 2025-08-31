@@ -2,13 +2,14 @@
 .mk-mcp-meta-box-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
 }
 
 .mk-mcp-settings-fields {
     display: flex;
-    gap: 20px;
-    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-end;
     background: #f9f9f9;
     padding: 15px;
     border: 1px solid #ddd;
@@ -27,6 +28,21 @@
     min-width: 150px;
 }
 
+#mk-mcp-column-names-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+#mk-mcp-column-names-wrapper label {
+    flex-basis: 100%;
+}
+
+.settings-hidden {
+    display: none;
+}
+
 /* Calendar Grid Styling */
 .mk-mcp-calendar-grid {
     display: grid;
@@ -34,7 +50,6 @@
     border: 1px solid #ccd0d4;
     border-radius: 4px;
 }
-
 .mk-mcp-day-header {
     background: #f0f0f1;
     font-weight: bold;
@@ -42,7 +57,6 @@
     padding: 8px;
     border-bottom: 1px solid #ccd0d4;
 }
-
 .mk-mcp-day {
     border-right: 1px solid #ccd0d4;
     border-bottom: 1px solid #ccd0d4;
@@ -52,15 +66,8 @@
     display: flex;
     flex-direction: column;
 }
-
-.mk-mcp-day:nth-child(7n) {
-    border-right: none;
-}
-
-.mk-mcp-day.mk-mcp-day-empty {
-    background: #f9f9f9;
-}
-
+.mk-mcp-day:nth-child(7n) { border-right: none; }
+.mk-mcp-day.mk-mcp-day-empty { background: #f9f9f9; }
 .mk-mcp-day-number {
     font-weight: bold;
     margin-bottom: 5px;
@@ -68,19 +75,24 @@
     padding-right: 5px;
     color: #555;
 }
+.mk-mcp-day-items-wrapper { flex-grow: 1; min-height: 80px; }
+.mk-mcp-add-item-btn { margin-top: auto; width: 100%; margin-top: 8px; }
 
-.mk-mcp-day-items-wrapper {
-    flex-grow: 1;
-    min-height: 80px;
+/* Admin Table Styling */
+.mk-mcp-admin-table th.mk-mcp-table-day-header { width: 10%; }
+.mk-mcp-admin-table th.mk-mcp-table-day-label { vertical-align: middle; padding-left: 10px; }
+.mk-mcp-admin-table td { min-height: 100px; vertical-align: top; padding: 8px; }
+.mk-mcp-admin-table tbody tr:nth-child(even) {
+    background-color: #dfdfdf;
+}
+.mk-mcp-add-item-btn-table {
+    display: block;
+    margin: 8px auto 0;
+    width: calc(100% - 10px);
 }
 
-.mk-mcp-add-item-btn {
-    margin-top: auto; /* Pushes button to the bottom */
-    width: 100%;
-    margin-top: 8px;
-}
 
-/* Calendar Item Styling */
+/* Calendar Item Styling (Shared) */
 .mk-mcp-item {
     background: #fff;
     border: 1px solid #999;
@@ -89,25 +101,22 @@
     margin-bottom: 5px;
     cursor: grab;
 }
-.mk-mcp-item:active {
-    cursor: grabbing;
-}
-
+.mk-mcp-item:active { cursor: grabbing; }
 .mk-mcp-item-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-weight: bold;
+    padding: 2px;
 }
-
 .mk-mcp-item-title-preview {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 120px;
+    flex-grow: 1;
+    padding-right: 10px;
 }
-
-
+.mk-mcp-item-actions { display: flex; gap: 4px; }
 .mk-mcp-item-actions button {
     cursor: pointer;
     background: #eee;
@@ -115,39 +124,29 @@
     border-radius: 50%;
     width: 22px;
     height: 22px;
-    line-height: 20px;
-    text-align: center;
+    line-height: 1;
     font-weight: bold;
     padding: 0;
 }
-.mk-mcp-item-actions .mk-mcp-delete-item {
-    color: #d63638;
-}
-
+.mk-mcp-item-actions .mk-mcp-delete-item { color: #d63638; }
 .mk-mcp-item-content {
     display: none; /* Hidden by default, toggled by JS */
     margin-top: 10px;
     padding-top: 10px;
     border-top: 1px dashed #ccc;
 }
-
 .mk-mcp-item-content input,
 .mk-mcp-item-content textarea {
     width: 100%;
     margin-bottom: 5px;
 }
-.mk-mcp-item-content textarea {
-    min-height: 80px;
-    resize: vertical;
-}
-
+.mk-mcp-item-content textarea { min-height: 80px; resize: vertical; }
 .mk-mcp-item-placeholder {
     height: 40px;
     background: #f0f8ff;
     border: 2px dashed #add8e6;
     margin-bottom: 5px;
 }
-
 .mk-mcp-loader {
     text-align: center;
     padding: 50px;
