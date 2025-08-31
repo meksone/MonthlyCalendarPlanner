@@ -1,6 +1,6 @@
 /**
  * Admin script for Monthly Calendar Planner
- * @version 1.0.3
+ * @version 1.0.6
  */
 jQuery(document).ready(function($) {
     const builderContainer = $('#mk-mcp-builder-wrapper');
@@ -11,7 +11,21 @@ jQuery(document).ready(function($) {
     const columnNameInputs = $('.mk-mcp-column-name-input');
     const templateSidebar = $('#mk-mcp-templates-sidebar');
 
+    const modalOverlay = $('#mk-mcp-view-switcher-modal-overlay');
+    let previousViewMode = viewModeSelect.val();
+
     function loadBuilderView() {
+        // Update view mode state
+        previousViewMode = viewModeSelect.val();
+        
+        // Toggle settings visibility
+        if (viewModeSelect.val() === 'table') {
+            tableSettings.removeClass('settings-hidden');
+            handleColumnNameInputs();
+        } else {
+            tableSettings.addClass('settings-hidden');
+        }
+
         const month = $('#mk_mcp_month').val();
         const year = $('#mk_mcp_year').val();
         const view_mode = viewModeSelect.val();
@@ -21,7 +35,7 @@ jQuery(document).ready(function($) {
             ajaxData.column_count = columnCountSelect.val();
             ajaxData.column_names = JSON.stringify(columnNameInputs.map(function() { return $(this).val(); }).get());
         }
-        builderContainer.html('<div class="mk-mcp-loader"><p>Loading View...</p></div>');
+        builderContainer.html('<div class="mk-mcp-loader"><p>'+mk_mcp_ajax.i18n.loading+'</p></div>');
         $.post(mk_mcp_ajax.ajax_url, ajaxData, function(response) {
             if (response.success) {
                 builderContainer.html(response.data);
@@ -70,7 +84,6 @@ jQuery(document).ready(function($) {
     }
     
     const getNewItemHtml = (title = "New Item", text = "") => {
-        // Escape quotes for HTML attributes
         const escTitle = $('<div/>').text(title).html();
         const escText = $('<div/>').text(text).html();
         return `
@@ -82,12 +95,38 @@ jQuery(document).ready(function($) {
                 <div class="mk-mcp-item-content" style="display: block;"><input type="text" class="mk-mcp-item-title" placeholder="Title" value="${escTitle}"><textarea class="mk-mcp-item-text" placeholder="Text">${escText}</textarea></div>
             </div>`;
     };
+    
+    function handleColumnNameInputs() {
+        const count = parseInt(columnCountSelect.val(), 10);
+        columnNameInputs.each(function(index) {
+            $(this).toggle(index < count);
+        });
+    }
 
-    $('#mk_mcp_month, #mk_mcp_year, #mk_mcp_view_mode, #mk_mcp_column_count').on('change', function() { serializeData(); loadBuilderView(); });
+    // --- Event Handlers ---
+    $('#mk_mcp_month, #mk_mcp_year, #mk_mcp_column_count').on('change', function() { serializeData(); loadBuilderView(); });
     columnNameInputs.on('change keyup', loadBuilderView);
+
+    viewModeSelect.on('focus', function() {
+        previousViewMode = $(this).val();
+    }).on('change', function() {
+        serializeData(); // Save data before showing confirm
+        modalOverlay.css('display', 'flex'); // Correctly use flex to center the modal
+    });
+
+    $('#mk-mcp-confirm-switch').on('click', function() {
+        modalOverlay.hide();
+        loadBuilderView();
+    });
+
+    $('#mk-mcp-cancel-switch').on('click', function() {
+        modalOverlay.hide();
+        viewModeSelect.val(previousViewMode); // Revert dropdown
+    });
+
     builderContainer.on('click', '.mk-mcp-add-item-btn', function() { $(this).siblings('.mk-mcp-day-items-wrapper').append(getNewItemHtml()); serializeData(); });
     builderContainer.on('click', '.mk-mcp-add-item-btn-table', function() { $(this).before(getNewItemHtml()); serializeData(); });
-    builderContainer.on('click', '.mk-mcp-delete-item', function() { if (confirm('Are you sure?')) { $(this).closest('.mk-mcp-item').remove(); serializeData(); } });
+    builderContainer.on('click', '.mk-mcp-delete-item', function() { if (confirm(mk_mcp_ajax.i18n.delete_confirm)) { $(this).closest('.mk-mcp-item').remove(); serializeData(); } });
     builderContainer.on('click', '.mk-mcp-duplicate-item', function() { const o = $(this).closest('.mk-mcp-item'); const c = o.clone(); c.attr('data-id', new Date().getTime()); o.after(c); serializeData(); });
     builderContainer.on('click', '.mk-mcp-item-header', function(e) { if (!$(e.target).is('button')) $(this).siblings('.mk-mcp-item-content').slideToggle(200); });
     builderContainer.on('keyup change', '.mk-mcp-item-title, .mk-mcp-item-text', function(){
@@ -97,6 +136,7 @@ jQuery(document).ready(function($) {
         serializeData();
     });
 
+    // Initial load
     loadBuilderView();
 });
 

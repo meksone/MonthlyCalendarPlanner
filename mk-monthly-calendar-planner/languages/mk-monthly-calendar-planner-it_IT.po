@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: mk-monthly-calendar-planner\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-31 16:57+0000\n"
-"PO-Revision-Date: 2025-08-31 20:06+0000\n"
+"PO-Revision-Date: 2025-08-31 20:48+0000\n"
 "Last-Translator: \n"
 "Language-Team: Italiano\n"
 "Language: it_IT\n"
@@ -55,6 +55,10 @@ msgstr "Aggiungerne uno?"
 msgid "All Calendars"
 msgstr "Tutti i Calendari"
 
+#: mk-monthly-calendar-planner.php:83
+msgid "Are you sure you want to delete this item?"
+msgstr "Sei sicuro di voler eliminare questo elemento?"
+
 #: includes/cpt.php:18
 msgid "Calendar Archives"
 msgstr "Archivi Calendario"
@@ -82,6 +86,10 @@ msgstr "Elenco Calendari"
 #: includes/cpt.php:39
 msgid "Calendars list navigation"
 msgstr "Navigazione elenco calendari"
+
+#: includes/meta-boxes.php:97 mk-monthly-calendar-planner.php:82
+msgid "Cancel"
+msgstr "Annulla"
 
 #: includes/meta-boxes.php:56
 msgid "Column Names"
@@ -146,6 +154,10 @@ msgstr "Testo dell'Elemento"
 #: includes/templates.php:70
 msgid "Item Title"
 msgstr "Titolo dell'Elemento"
+
+#: includes/meta-boxes.php:94
+msgid "Layout Change Warning"
+msgstr "Avviso cambio visualizzazione"
 
 #: includes/meta-boxes.php:62
 msgid "Loading View..."
@@ -239,6 +251,10 @@ msgctxt "Post Type Singular Name"
 msgid "Template"
 msgstr "Modello"
 
+#: includes/meta-boxes.php:98 mk-monthly-calendar-planner.php:81
+msgid "Proceed"
+msgstr "Procedi"
+
 #: includes/cpt.php:34
 msgid "Remove featured image"
 msgstr "Rimuovi immagine in evidenza"
@@ -262,6 +278,14 @@ msgstr "Imposta immagine in evidenza"
 #: includes/meta-boxes.php:158
 msgid "Sun"
 msgstr "Dom"
+
+#: includes/meta-boxes.php:95 mk-monthly-calendar-planner.php:80
+msgid ""
+"Switching views may alter your item layout, as items from multiple columns "
+"will be merged into one. Do you want to proceed?"
+msgstr ""
+"Cambiare visualizzazione altera l'ordine degli elementi: sei sicuro di voler "
+"procedere?"
 
 #: includes/meta-boxes.php:54
 msgid "Table View"

@@ -1,7 +1,7 @@
 <?php
 /**
  * Item Templates for Monthly Calendar Planner
- * @version 1.0.3
+ * @version 1.0.7
  */
 
 // If this file is called directly, abort.
@@ -27,7 +27,7 @@ function mk_mcp_register_template_cpt() {
     $args = [
         'label'         => __('Template', 'mk-monthly-calendar-planner'),
         'labels'        => $labels,
-        'supports'      => ['title'],
+        'supports'      => ['title', 'revisions'],
         'hierarchical'  => false,
         'public'        => false,
         'show_ui'       => true,
@@ -80,7 +80,7 @@ function mk_mcp_render_template_meta_box_content($post) {
 }
 
 /**
- * Save template meta box data.
+ * Save template meta box data and sync with revisions.
  */
 function mk_mcp_save_template_meta_box_data($post_id) {
     if (!isset($_POST['mk_mcp_template_meta_box_nonce']) || !wp_verify_nonce($_POST['mk_mcp_template_meta_box_nonce'], 'mk_mcp_save_template_meta_box_data')) return;
@@ -93,6 +93,21 @@ function mk_mcp_save_template_meta_box_data($post_id) {
     if (isset($_POST['mk_mcp_item_text'])) {
         update_post_meta($post_id, '_mk_mcp_item_text', sanitize_textarea_field($_POST['mk_mcp_item_text']));
     }
+
+    // Now, sync this saved data with the latest revision.
+    $revisions = wp_get_post_revisions($post_id);
+    if (!empty($revisions)) {
+        $latest_revision = array_shift($revisions);
+        $revision_id = $latest_revision->ID;
+
+        $meta_keys = mk_mcp_get_revisioned_meta_keys();
+        foreach ($meta_keys as $meta_key) {
+            $meta_value = get_post_meta($post_id, $meta_key, true);
+            if (false !== $meta_value) {
+                update_metadata('post', $revision_id, $meta_key, $meta_value);
+            }
+        }
+    }
 }
-add_action('save_post', 'mk_mcp_save_template_meta_box_data');
+add_action('save_post_mcp_template', 'mk_mcp_save_template_meta_box_data');
 
