@@ -1,4 +1,8 @@
 <?php
+/**
+ * Item Templates for Monthly Calendar Planner
+ * @version 1.0.3
+ */
 
 // If this file is called directly, abort.
 if (!defined('WPINC')) {
@@ -60,6 +64,9 @@ function mk_mcp_render_template_meta_box_content($post) {
     $item_text = get_post_meta($post->ID, '_mk_mcp_item_text', true);
     ?>
     <p>
+        <em><?php _e('The main title above is for backend identification only.', 'mk-monthly-calendar-planner'); ?></em>
+    </p>
+    <p>
         <label for="mk_mcp_item_title"><strong><?php _e('Item Title', 'mk-monthly-calendar-planner'); ?></strong></label><br>
         <input type="text" id="mk_mcp_item_title" name="mk_mcp_item_title" value="<?php echo esc_attr($item_title); ?>" style="width:100%;" />
         <span class="description"><?php _e('This is the title that will be pre-populated when you use the template.', 'mk-monthly-calendar-planner'); ?></span>
@@ -88,3 +95,4 @@ function mk_mcp_save_template_meta_box_data($post_id) {
     }
 }
 add_action('save_post', 'mk_mcp_save_template_meta_box_data');
+
