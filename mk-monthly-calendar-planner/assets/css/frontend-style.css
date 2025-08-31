@@ -13,6 +13,8 @@
     color: #333;
 }
 
+/* --- 1. Calendar View Styles --- */
+
 /* Calendar Grid - Desktop First */
 .mk-mcp-calendar-grid {
     display: grid;
@@ -20,7 +22,6 @@
     border-left: 1px solid #e0e0e0;
     border-top: 1px solid #e0e0e0;
 }
-
 .mk-mcp-day-header {
     background: #f5f5f5;
     font-weight: bold;
@@ -30,7 +31,6 @@
     border-bottom: 1px solid #e0e0e0;
     font-size: 1em;
 }
-
 .mk-mcp-day {
     border-right: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;
@@ -40,11 +40,7 @@
     display: flex;
     flex-direction: column;
 }
-
-.mk-mcp-day.mk-mcp-day-empty {
-    background: #fafafa;
-}
-
+.mk-mcp-day.mk-mcp-day-empty { background: #fafafa; }
 .mk-mcp-day-number {
     font-weight: bold;
     font-size: 1.2em;
@@ -52,17 +48,47 @@
     margin-bottom: 10px;
     text-align: right;
 }
+.mk-mcp-day-name { display: none; }
+.mk-mcp-day-items-wrapper { flex-grow: 1; }
 
-/* Day name is hidden by default on larger screens */
-.mk-mcp-day-name {
-    display: none;
+/* --- 2. Table View Styles --- */
+
+.mk-mcp-table-day-row {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    margin-bottom: 1.5em;
+    overflow: hidden;
+}
+.mk-mcp-table-day-header {
+    background: #f5f5f5;
+    padding: 10px 15px;
+}
+.mk-mcp-table-day-header h3 {
+    margin: 0;
+    font-size: 1.4em;
+    color: #333;
+}
+.mk-mcp-table-cols-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background-color: #e0e0e0;
+}
+.mk-mcp-table-col {
+    background-color: #fff;
+    padding: 15px;
+}
+.mk-mcp-table-col-header {
+    margin: 0 0 10px 0;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #34495e;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 8px;
 }
 
-.mk-mcp-day-items-wrapper {
-    flex-grow: 1;
-}
+/* --- 3. Shared & Item Styles --- */
 
-/* Calendar Items */
 .mk-mcp-item {
     background: #ffffff;
     border: 1px solid #e0e0e0;
@@ -71,92 +97,48 @@
     padding: 12px;
     margin-bottom: 10px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.07);
-    transition: box-shadow 0.3s ease;
 }
-
-.mk-mcp-item:hover {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
+.mk-mcp-table-col .mk-mcp-item:last-child { margin-bottom: 0; }
 .mk-mcp-item-title {
     font-weight: bold;
     margin: 0 0 5px 0;
     font-size: 1em;
     color: #34495e;
 }
-
 .mk-mcp-item-text {
     font-size: 0.9em;
     color: #555;
     line-height: 1.5;
 }
-.mk-mcp-item-text p:last-child {
-    margin-bottom: 0;
-}
+.mk-mcp-item-text p:last-child { margin-bottom: 0; }
 
+/* --- 4. Responsive Styles --- */
 
-/* Tablet Responsiveness */
+/* Tablet */
 @media (max-width: 900px) {
-    .mk-mcp-calendar-title {
-        font-size: 1.8em;
-    }
-    .mk-mcp-day {
-        min-height: 120px;
-        padding: 8px;
-    }
-    .mk-mcp-day-header {
-        font-size: 0.9em;
-    }
-    .mk-mcp-day-number {
-        font-size: 1em;
-    }
-    .mk-mcp-item {
-        padding: 8px;
-        border-left-width: 4px;
-    }
-    .mk-mcp-item-title {
-        font-size: 0.9em;
-    }
-    .mk-mcp-item-text {
-        font-size: 0.85em;
-    }
+    .mk-mcp-calendar-title { font-size: 1.8em; }
+    .mk-mcp-day { min-height: 120px; padding: 8px; }
+    .mk-mcp-day-header { font-size: 0.9em; }
+    .mk-mcp-day-number { font-size: 1em; }
+    .mk-mcp-item { padding: 8px; border-left-width: 4px; }
 }
 
-
-/* Mobile Responsiveness - Switch to List View */
+/* Mobile */
 @media (max-width: 767px) {
-    .mk-mcp-calendar-title {
-        font-size: 1.6em;
-    }
+    .mk-mcp-calendar-title { font-size: 1.6em; }
 
-    /* Hide day headers and switch to block layout */
-    .mk-mcp-day-header {
-        display: none;
-    }
-    .mk-mcp-calendar-grid {
-        display: block;
-        border-left: none;
-    }
-
-    /* Hide empty days to save space */
-    .mk-mcp-day.mk-mcp-day-empty {
-        display: none;
-    }
-
+    /* Calendar View Mobile: Switch to List */
+    .mk-mcp-day-header { display: none; }
+    .mk-mcp-calendar-grid { display: block; border-left: none; }
+    .mk-mcp-day.mk-mcp-day-empty { display: none; }
     .mk-mcp-day {
         display: block;
         min-height: 0;
         width: 100%;
-        border-right: none; /* remove grid border */
+        border-right: none;
         padding: 0;
     }
-    /* Add top border to all but the first day */
-    .mk-mcp-day + .mk-mcp-day {
-         border-top: 1px solid #e0e0e0;
-    }
-
-
-    /* Style day number as a header for the list item */
+    .mk-mcp-day + .mk-mcp-day { border-top: 1px solid #e0e0e0; }
     .mk-mcp-day-number {
         display: flex;
         justify-content: space-between;
@@ -169,11 +151,7 @@
         font-weight: 600;
         border-bottom: 1px solid #e0e0e0;
     }
-     .mk-mcp-day:last-child .mk-mcp-day-number{
-        border-bottom: none;
-    }
-
-    /* Display and style the day name on mobile */
+    .mk-mcp-day:last-child .mk-mcp-day-number { border-bottom: none; }
     .mk-mcp-day-name {
         display: inline;
         font-size: 0.9em;
@@ -181,16 +159,12 @@
         color: #555;
         margin-left: 3px;
     }
+    .mk-mcp-day-items-wrapper { padding: 15px; }
+    .mk-mcp-item { margin-bottom: 12px; }
+    .mk-mcp-day-items-wrapper .mk-mcp-item:last-child { margin-bottom: 0; }
 
-    /* Add padding to the items wrapper instead of the day */
-    .mk-mcp-day-items-wrapper {
-        padding: 15px;
-    }
-    
-    .mk-mcp-item {
-        margin-bottom: 12px;
-    }
-    .mk-mcp-day-items-wrapper .mk-mcp-item:last-child {
-        margin-bottom: 0;
-    }
+    /* Table View Mobile: Columns already stack due to grid settings */
+    .mk-mcp-table-day-header h3 { font-size: 1.2em; }
+    .mk-mcp-table-col { padding: 10px; }
 }
+
