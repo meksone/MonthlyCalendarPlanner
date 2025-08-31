@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       mk-monthly-calendar-planner
  * Description:       A plugin to create and display monthly calendars with events using a shortcode.
- * Version:           1.0.6
+ * Version:           1.0.7
  * Author:            meksONE
  * Author URI:        https://meksone.com/
  * Text Domain:       mk-monthly-calendar-planner
@@ -14,7 +14,7 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-define( 'MK_MCP_VERSION', '1.0.6' );
+define( 'MK_MCP_VERSION', '1.0.7' );
 define( 'MK_MCP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MK_MCP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -88,33 +88,6 @@ function mk_mcp_get_revisioned_meta_keys() {
 }
 
 /**
- * Save meta data when a revision is created.
- *
- * @param int $revision_id The ID of the revision post.
- */
-function mk_mcp_save_revision_meta_data( $revision_id ) {
-    $parent_id = wp_get_post_parent_id( $revision_id );
-    if ( $parent_id === 0 ) {
-        return;
-    }
-
-    $parent = get_post( $parent_id );
-    if ( ! in_array( $parent->post_type, ['monthly_calendar', 'mcp_template'], true ) ) {
-        return;
-    }
-    
-    $meta_keys = mk_mcp_get_revisioned_meta_keys();
-    foreach ( $meta_keys as $meta_key ) {
-        $meta_value = get_post_meta( $parent_id, $meta_key, true );
-        if ( false !== $meta_value ) {
-            // Using update_metadata is safer for revisions than update_post_meta.
-            update_metadata( 'post', $revision_id, $meta_key, $meta_value );
-        }
-    }
-}
-add_action( 'wp_save_post_revision', 'mk_mcp_save_revision_meta_data' );
-
-/**
  * Restore meta data when a revision is restored.
  *
  * @param int $post_id     The ID of the main post.
@@ -132,10 +105,78 @@ function mk_mcp_restore_revision_meta_data( $post_id, $revision_id ) {
         if ( false !== $meta_value ) {
             update_post_meta( $post_id, $meta_key, $meta_value );
         } else {
-            // If the meta key doesn't exist in the revision, delete it from the main post.
             delete_post_meta( $post_id, $meta_key );
         }
     }
 }
 add_action( 'wp_restore_post_revision', 'mk_mcp_restore_revision_meta_data', 10, 2 );
+
+/**
+ * Force a revision to be created if meta data has changed.
+ *
+ * @param array $data    An array of slashed post data.
+ * @param array $postarr An array of sanitized, but otherwise unmodified post data.
+ * @return array The filtered post data.
+ */
+function mk_mcp_force_revision_on_meta_change( $data, $postarr ) {
+    if ( !isset($postarr['ID']) || !in_array( $data['post_type'], ['monthly_calendar', 'mcp_template'] ) || (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) ) {
+        return $data;
+    }
+    
+    $post_id = $postarr['ID'];
+    $post = get_post($post_id);
+    if ( ! wp_revisions_enabled( $post ) ) {
+        return $data;
+    }
+
+    $nonce_action = 'mcp_template' === $data['post_type'] ? 'mk_mcp_save_template_meta_box_data' : 'mk_mcp_save_meta_box_data';
+    $nonce_name = 'mcp_template' === $data['post_type'] ? 'mk_mcp_template_meta_box_nonce' : 'mk_mcp_meta_box_nonce';
+    if ( !isset($_POST[$nonce_name]) || !wp_verify_nonce($_POST[$nonce_name], $nonce_action) ) {
+        return $data;
+    }
+
+    $meta_has_changed = false;
+    $meta_keys = mk_mcp_get_revisioned_meta_keys();
+
+    foreach ($meta_keys as $meta_key) {
+        $old_value = get_post_meta($post_id, $meta_key, true);
+        $new_value_raw = null;
+
+        $post_key_map = [
+            '_mk_mcp_month'          => 'mk_mcp_month',
+            '_mk_mcp_year'           => 'mk_mcp_year',
+            '_mk_mcp_calendar_items' => 'mk_mcp_calendar_items_json',
+            '_mk_mcp_view_mode'      => 'mk_mcp_view_mode',
+            '_mk_mcp_column_count'   => 'mk_mcp_column_count',
+            '_mk_mcp_column_names'   => 'mk_mcp_column_names',
+            '_mk_mcp_item_title'     => 'mk_mcp_item_title',
+            '_mk_mcp_item_text'      => 'mk_mcp_item_text',
+        ];
+
+        if (!isset($post_key_map[$meta_key])) continue;
+        
+        $post_key = $post_key_map[$meta_key];
+        
+        if (isset($_POST[$post_key])) {
+            $new_value_raw = $_POST[$post_key];
+            if ($meta_key === '_mk_mcp_calendar_items') {
+                 $new_value_raw = stripslashes($new_value_raw);
+            } elseif ($meta_key === '_mk_mcp_column_names' && is_array($new_value_raw)) {
+                 $new_value_raw = wp_json_encode(array_map('sanitize_text_field', $new_value_raw));
+            }
+        }
+        
+        if ( (string) $old_value !== (string) $new_value_raw ) {
+            $meta_has_changed = true;
+            break;
+        }
+    }
+
+    if ( $meta_has_changed ) {
+        $data['post_content'] = $data['post_content'] . '<!-- ' . rand() . ' -->';
+    }
+
+    return $data;
+}
+add_filter( 'wp_insert_post_data', 'mk_mcp_force_revision_on_meta_change', 99, 2 );
 
