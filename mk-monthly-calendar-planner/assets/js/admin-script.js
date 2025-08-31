@@ -49,46 +49,30 @@ jQuery(document).ready(function($) {
     // Function to serialize calendar/table data and update the hidden input
     function serializeData() {
         const data = {};
-        const view_mode = viewModeSelect.val();
+        
+        $('.mk-mcp-day-items-wrapper').each(function() {
+            const day = $(this).data('day');
+            const col = $(this).data('col');
+            
+            if (day === undefined || col === undefined) return;
 
-        if (view_mode === 'table') {
-            $('.mk-mcp-admin-table tbody tr').each(function() {
-                const day = $(this).data('day');
-                if (day) {
-                    data[day] = {};
-                    $(this).find('.mk-mcp-day-items-wrapper').each(function() {
-                        const col = $(this).data('col');
-                        const items = [];
-                        $(this).find('.mk-mcp-item').each(function() {
-                            items.push({
-                                title: $(this).find('.mk-mcp-item-title').val(),
-                                text: $(this).find('.mk-mcp-item-text').val()
-                            });
-                        });
-                        if (items.length > 0) {
-                            data[day][col] = items;
-                        }
-                    });
-                }
+            if (!data[day]) {
+                data[day] = {};
+            }
+
+            const items = [];
+            $(this).find('.mk-mcp-item').each(function() {
+                items.push({
+                    title: $(this).find('.mk-mcp-item-title').val(),
+                    text: $(this).find('.mk-mcp-item-text').val()
+                });
             });
-        } else { // Calendar view
-             $('.mk-mcp-day').each(function() {
-                const day = $(this).data('day');
-                if (day) {
-                    data[day] = { 0: [] }; // Store all in column 0
-                    const items = [];
-                    $(this).find('.mk-mcp-item').each(function() {
-                        items.push({
-                            title: $(this).find('.mk-mcp-item-title').val(),
-                            text: $(this).find('.mk-mcp-item-text').val()
-                        });
-                    });
-                    if (items.length > 0) {
-                        data[day][0] = items;
-                    }
-                }
-            });
-        }
+
+            if (items.length > 0) {
+                data[day][col] = items;
+            }
+        });
+
         itemsJsonInput.val(JSON.stringify(data));
     }
 
@@ -132,11 +116,14 @@ jQuery(document).ready(function($) {
         serializeData();
         loadBuilderView();
     });
+    
+    // Handle column name change
+    columnNameInputs.on('change keyup', function(){
+        serializeData();
+        loadBuilderView();
+    });
 
-    // Add new item
-    builderContainer.on('click', '.mk-mcp-add-item-btn', function() {
-        const itemsWrapper = $(this).siblings('.mk-mcp-day-items-wrapper');
-        const newItemHtml = `
+    const newItemHtml = `
             <div class="mk-mcp-item" data-id="${new Date().getTime()}">
                 <div class="mk-mcp-item-header">
                     <span class="mk-mcp-item-title-preview">New Item</span>
@@ -150,9 +137,19 @@ jQuery(document).ready(function($) {
                     <textarea class="mk-mcp-item-text" placeholder="Text"></textarea>
                 </div>
             </div>`;
-        itemsWrapper.append(newItemHtml);
+
+    // Add new item (Calendar)
+    builderContainer.on('click', '.mk-mcp-add-item-btn', function() {
+        $(this).siblings('.mk-mcp-day-items-wrapper').append(newItemHtml);
         serializeData();
     });
+
+    // Add new item (Table)
+    builderContainer.on('click', '.mk-mcp-add-item-btn-table', function() {
+        $(this).before(newItemHtml);
+        serializeData();
+    });
+
 
     // Delete item
     builderContainer.on('click', '.mk-mcp-delete-item', function() {
