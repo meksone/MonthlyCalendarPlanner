@@ -1,0 +1,343 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: mk-monthly-calendar-planner\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-31 16:57+0000\n"
+"PO-Revision-Date: 2025-08-31 19:13+0200\n"
+"Last-Translator: \n"
+"Language-Team: Italiano\n"
+"Language: it_IT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 3.7\n"
+"X-Loco-Version: 2.8.0; wp-6.8.2; php-8.3.6\n"
+"X-Domain: mk-monthly-calendar-planner\n"
+
+#: includes/meta-boxes.php:193
+msgid "+"
+msgstr "+"
+
+#. Description of the plugin
+msgid ""
+"A plugin to create and display monthly calendars with events using a shortcode."
+msgstr ""
+"Un plugin per creare e visualizzare calendari mensili con eventi utilizzando "
+"uno shortcode."
+
+#: includes/cpt.php:44
+msgid "A post type for creating monthly calendars."
+msgstr "Un tipo di articolo per creare calendari mensili."
+
+#: includes/meta-boxes.php:174
+msgid "Add Item"
+msgstr "Aggiungi Elemento"
+
+#: includes/cpt.php:23
+msgid "Add New"
+msgstr "Aggiungi Nuovo"
+
+#: includes/cpt.php:22
+msgid "Add New Calendar"
+msgstr "Aggiungi Nuovo Calendario"
+
+#: includes/templates.php:20
+msgid "Add New Template"
+msgstr "Aggiungi Nuovo Modello"
+
+#: includes/meta-boxes.php:69
+msgid "Add one?"
+msgstr "Aggiungerne uno?"
+
+#: includes/cpt.php:21
+msgid "All Calendars"
+msgstr "Tutti i Calendari"
+
+#: includes/cpt.php:18
+msgid "Calendar Archives"
+msgstr "Archivi Calendario"
+
+#: includes/cpt.php:19
+msgid "Calendar Attributes"
+msgstr "Attributi Calendario"
+
+#: includes/shortcode.php:43
+msgid "Calendar is not configured correctly (missing month or year)."
+msgstr "Il calendario non è configurato correttamente (manca mese o anno)."
+
+#: includes/meta-boxes.php:18
+msgid "Calendar Settings & Items"
+msgstr "Impostazioni e Elementi del Calendario"
+
+#: includes/meta-boxes.php:54
+msgid "Calendar View"
+msgstr "Vista Calendario"
+
+#: includes/cpt.php:38
+msgid "Calendars list"
+msgstr "Elenco Calendari"
+
+#: includes/cpt.php:39
+msgid "Calendars list navigation"
+msgstr "Navigazione elenco calendari"
+
+#: includes/meta-boxes.php:56
+msgid "Column Names"
+msgstr "Nomi Colonne"
+
+#: includes/meta-boxes.php:184
+msgid "Day"
+msgstr "Giorno"
+
+#: includes/meta-boxes.php:169 includes/meta-boxes.php:192
+msgid "Delete"
+msgstr "Elimina"
+
+#: includes/meta-boxes.php:169 includes/meta-boxes.php:192
+msgid "Duplicate"
+msgstr "Duplica"
+
+#: includes/cpt.php:25
+msgid "Edit Calendar"
+msgstr "Modifica Calendario"
+
+#: includes/templates.php:21
+msgid "Edit Template"
+msgstr "Modifica Modello"
+
+#: includes/meta-boxes.php:41
+msgid "Evening"
+msgstr "Sera"
+
+#: includes/cpt.php:32
+msgid "Featured Image"
+msgstr "Immagine in Evidenza"
+
+#: includes/cpt.php:40
+msgid "Filter calendars list"
+msgstr "Filtra elenco calendari"
+
+#: includes/meta-boxes.php:158
+msgid "Fri"
+msgstr "Ven"
+
+#. Author URI of the plugin
+msgid "https://meksone.com/"
+msgstr "https://meksone.com/"
+
+#: includes/cpt.php:36
+msgid "Insert into calendar"
+msgstr "Inserisci nel calendario"
+
+#: includes/shortcode.php:26
+msgid "Invalid calendar ID provided."
+msgstr "ID calendario fornito non valido."
+
+#: includes/meta-boxes.php:67
+msgid "Item Templates"
+msgstr "Modelli di Elemento"
+
+#: includes/templates.php:75
+msgid "Item Text"
+msgstr "Testo dell'Elemento"
+
+#: includes/templates.php:70
+msgid "Item Title"
+msgstr "Titolo dell'Elemento"
+
+#: includes/meta-boxes.php:62
+msgid "Loading View..."
+msgstr "Caricamento Vista..."
+
+#. Author of the plugin
+msgid "meksONE"
+msgstr "meksONE"
+
+#. Name of the plugin
+msgid "mk-monthly-calendar-planner"
+msgstr "mk-monthly-calendar-planner"
+
+#: includes/meta-boxes.php:158
+msgid "Mon"
+msgstr "Lun"
+
+#: includes/meta-boxes.php:52
+msgid "Month"
+msgstr "Mese"
+
+#: includes/cpt.php:17 includes/cpt.php:43
+msgid "Monthly Calendar"
+msgstr "Calendario Mensile"
+
+#: includes/cpt.php:16
+msgid "Monthly Calendars"
+msgstr "Calendari Mensili"
+
+#: includes/meta-boxes.php:41
+msgid "Morning"
+msgstr "Mattina"
+
+#: includes/cpt.php:24
+msgid "New Calendar"
+msgstr "Nuovo Calendario"
+
+#: includes/templates.php:22
+msgid "New Template"
+msgstr "Nuovo Modello"
+
+#: includes/meta-boxes.php:41
+msgid "Night"
+msgstr "Notte"
+
+#: includes/templates.php:25
+msgid "No templates found"
+msgstr "Nessun modello trovato"
+
+#: includes/meta-boxes.php:69
+msgid "No templates found."
+msgstr "Nessun modello trovato."
+
+#: includes/cpt.php:30
+msgid "Not found"
+msgstr "Non trovato"
+
+#: includes/cpt.php:31
+msgid "Not found in Trash"
+msgstr "Non trovato nel cestino"
+
+#: includes/meta-boxes.php:56
+msgid "Number of Columns"
+msgstr "Numero di Colonne"
+
+#: includes/cpt.php:20
+msgid "Parent Calendar:"
+msgstr "Calendario Genitore:"
+
+#: includes/meta-boxes.php:41
+msgid "Pause"
+msgstr "Pausa"
+
+#: includes/cpt.php:14
+msgctxt "Post Type General Name"
+msgid "Monthly Calendars"
+msgstr "Calendari Mensili"
+
+#: includes/templates.php:17
+msgctxt "Post Type General Name"
+msgid "Templates"
+msgstr "Modelli"
+
+#: includes/cpt.php:15
+msgctxt "Post Type Singular Name"
+msgid "Monthly Calendar"
+msgstr "Calendario Mensile"
+
+#: includes/templates.php:18
+msgctxt "Post Type Singular Name"
+msgid "Template"
+msgstr "Modello"
+
+#: includes/cpt.php:34
+msgid "Remove featured image"
+msgstr "Rimuovi immagine in evidenza"
+
+#: includes/meta-boxes.php:158
+msgid "Sat"
+msgstr "Sab"
+
+#: includes/cpt.php:29
+msgid "Search Calendar"
+msgstr "Cerca Calendario"
+
+#: includes/templates.php:24
+msgid "Search Templates"
+msgstr "Cerca Modelli"
+
+#: includes/cpt.php:33
+msgid "Set featured image"
+msgstr "Imposta immagine in evidenza"
+
+#: includes/meta-boxes.php:158
+msgid "Sun"
+msgstr "Dom"
+
+#: includes/meta-boxes.php:54
+msgid "Table View"
+msgstr "Vista Tabella"
+
+#: includes/templates.php:28
+msgid "Template"
+msgstr "Modello"
+
+#: includes/templates.php:49
+msgid "Template Item Data"
+msgstr "Dati Elemento Modello"
+
+#: includes/templates.php:19
+msgid "Templates"
+msgstr "Modelli"
+
+#: includes/meta-boxes.php:169 includes/meta-boxes.php:192
+msgid "Text"
+msgstr "Testo"
+
+#: includes/templates.php:67
+msgid "The main title above is for backend identification only."
+msgstr "Il titolo principale sopra è solo per l'identificazione nel backend."
+
+#: includes/templates.php:77
+msgid "This is the text content that will be pre-populated."
+msgstr "Questo è il contenuto testuale che verrà precompilato."
+
+#: includes/templates.php:72
+msgid "This is the title that will be pre-populated when you use the template."
+msgstr "Questo è il titolo che verrà precompilato quando si utilizza il modello."
+
+#: includes/meta-boxes.php:158
+msgid "Thu"
+msgstr "Gio"
+
+#: includes/meta-boxes.php:169 includes/meta-boxes.php:192
+msgid "Title"
+msgstr "Titolo"
+
+#: includes/meta-boxes.php:158
+msgid "Tue"
+msgstr "Mar"
+
+#: includes/cpt.php:26
+msgid "Update Calendar"
+msgstr "Aggiorna Calendario"
+
+#: includes/cpt.php:37
+msgid "Uploaded to this calendar"
+msgstr "Caricato in questo calendario"
+
+#: includes/cpt.php:35
+msgid "Use as featured image"
+msgstr "Usa come immagine in evidenza"
+
+#: includes/cpt.php:27
+msgid "View Calendar"
+msgstr "Visualizza Calendario"
+
+#: includes/cpt.php:28
+msgid "View Calendars"
+msgstr "Visualizza Calendari"
+
+#: includes/meta-boxes.php:54
+msgid "View Mode"
+msgstr "Modalità di Visualizzazione"
+
+#: includes/templates.php:23
+msgid "View Template"
+msgstr "Visualizza Modello"
+
+#: includes/meta-boxes.php:158
+msgid "Wed"
+msgstr "Mer"
+
+#: includes/meta-boxes.php:53
+msgid "Year"
+msgstr "Anno"
