@@ -1,7 +1,7 @@
 <?php
 /**
  * Main Meta Box for Monthly Calendar Planner
- * @version 1.0.4
+ * @version 1.0.7
  */
 
 // If this file is called directly, abort.
@@ -99,13 +99,14 @@ function mk_mcp_render_meta_box_content($post) {
 }
 
 /**
- * Save meta box data.
+ * Save meta box data and sync with revisions.
  */
 function mk_mcp_save_meta_box_data($post_id) {
     if (!isset($_POST['mk_mcp_meta_box_nonce']) || !wp_verify_nonce($_POST['mk_mcp_meta_box_nonce'], 'mk_mcp_save_meta_box_data')) return;
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
     if (isset($_POST['post_type']) && 'monthly_calendar' == $_POST['post_type'] && !current_user_can('edit_post', $post_id)) return;
 
+    // Save all the meta fields
     $fields = ['_mk_mcp_month', '_mk_mcp_year', '_mk_mcp_view_mode', '_mk_mcp_column_count'];
     foreach ($fields as $field_key) {
         $post_key = str_replace('_mk_mcp_', 'mk_mcp_', $field_key); 
@@ -126,13 +127,29 @@ function mk_mcp_save_meta_box_data($post_id) {
             update_post_meta($post_id, '_mk_mcp_calendar_items', wp_json_encode($data));
         }
     }
+
+    // Now, sync this saved data with the latest revision.
+    $revisions = wp_get_post_revisions($post_id);
+    if (!empty($revisions)) {
+        $latest_revision = array_shift($revisions);
+        $revision_id = $latest_revision->ID;
+
+        $meta_keys = mk_mcp_get_revisioned_meta_keys();
+        foreach ($meta_keys as $meta_key) {
+            $meta_value = get_post_meta($post_id, $meta_key, true);
+            if (false !== $meta_value) {
+                update_metadata('post', $revision_id, $meta_key, $meta_value);
+            }
+        }
+    }
 }
-add_action('save_post', 'mk_mcp_save_meta_box_data');
+add_action('save_post_monthly_calendar', 'mk_mcp_save_meta_box_data');
+
 
 function mk_mcp_convert_data_to_v2_format($items) {
     if (empty($items) || !is_array($items)) return [];
     $first_day_key = array_key_first($items);
-    if (isset($items[$first_day_key][0]['title'])) {
+    if (is_numeric($first_day_key) && isset($items[$first_day_key][0]['title'])) {
         $new_data = [];
         foreach ($items as $day => $day_items) {
             $new_data[$day][0] = $day_items;
@@ -232,3 +249,4 @@ function mk_mcp_render_frontend_table($month, $year, $items, $column_count, $col
     }
     echo '</div>';
 }
+
