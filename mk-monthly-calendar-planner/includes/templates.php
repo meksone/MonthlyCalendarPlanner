@@ -1,7 +1,7 @@
 <?php
 /**
  * Item Templates for Monthly Calendar Planner
- * @version 1.0.3
+ * @version 1.0.5
  */
 
 // If this file is called directly, abort.
@@ -27,7 +27,7 @@ function mk_mcp_register_template_cpt() {
     $args = [
         'label'         => __('Template', 'mk-monthly-calendar-planner'),
         'labels'        => $labels,
-        'supports'      => ['title'],
+        'supports'      => ['title', 'revisions'],
         'hierarchical'  => false,
         'public'        => false,
         'show_ui'       => true,
@@ -95,4 +95,3 @@ function mk_mcp_save_template_meta_box_data($post_id) {
     }
 }
 add_action('save_post', 'mk_mcp_save_template_meta_box_data');
-
