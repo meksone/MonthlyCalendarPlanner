@@ -104,7 +104,7 @@ function mk_mcp_generate_dynamic_css() {
 
     // Items
     if (!empty($options['item_bg_color'])) { $css .= ".mk-mcp-item { background-color: " . esc_attr($options['item_bg_color']) . "; }\n"; }
-    $border_css('item_border', '.mk-mcp-item');
+    if (!empty($options['item_border'])) { $css .= ".mk-mcp-item { border: " . esc_attr($options['item_border']) . "; }\n"; }
     if (!empty($options['item_text_color'])) { $css .= ".mk-mcp-item, .mk-mcp-item .mk-mcp-item-title { color: " . esc_attr($options['item_text_color']) . "; }\n"; }
     if (!empty($options['item_font_family'])) { $css .= ".mk-mcp-frontend-calendar-wrapper { font-family: " . esc_attr($options['item_font_family']) . "; }\n"; }
 
