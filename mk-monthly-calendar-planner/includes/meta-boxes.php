@@ -106,44 +106,6 @@ function mk_mcp_save_meta_box_data($post_id) {
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
     if (isset($_POST['post_type']) && 'monthly_calendar' == $_POST['post_type'] && !current_user_can('edit_post', $post_id)) return;
 
-    $post = get_post($post_id);
-    $meta_has_changed = false;
-
-    if (wp_revisions_enabled($post)) {
-        $meta_keys = mk_mcp_get_revisioned_meta_keys();
-        foreach ($meta_keys as $meta_key) {
-            $old_value = get_post_meta($post_id, $meta_key, true);
-            $new_value_raw = null;
-
-            $post_key_map = [
-                '_mk_mcp_month'          => 'mk_mcp_month',
-                '_mk_mcp_year'           => 'mk_mcp_year',
-                '_mk_mcp_calendar_items' => 'mk_mcp_calendar_items_json',
-                '_mk_mcp_view_mode'      => 'mk_mcp_view_mode',
-                '_mk_mcp_column_count'   => 'mk_mcp_column_count',
-                '_mk_mcp_column_names'   => 'mk_mcp_column_names',
-            ];
-
-            if (!isset($post_key_map[$meta_key])) continue;
-
-            $post_key = $post_key_map[$meta_key];
-
-            if (isset($_POST[$post_key])) {
-                $new_value_raw = $_POST[$post_key];
-                if ($meta_key === '_mk_mcp_calendar_items') {
-                     $new_value_raw = wp_unslash($new_value_raw);
-                } elseif ($meta_key === '_mk_mcp_column_names' && is_array($new_value_raw)) {
-                     $new_value_raw = wp_json_encode(array_map('sanitize_text_field', $new_value_raw));
-                }
-            }
-
-            if ( (string) $old_value !== (string) $new_value_raw ) {
-                $meta_has_changed = true;
-                break;
-            }
-        }
-    }
-
     // Save all the meta fields
     $fields = ['_mk_mcp_month', '_mk_mcp_year', '_mk_mcp_view_mode', '_mk_mcp_column_count'];
     foreach ($fields as $field_key) {
@@ -166,9 +128,11 @@ function mk_mcp_save_meta_box_data($post_id) {
         }
     }
 
-    // If meta has changed, create a new revision.
-    if ($meta_has_changed) {
+    // If the dedicated meta check flagged a change, create a revision.
+    if ( MK_MCP_State_Manager::$meta_has_changed ) {
         wp_save_post_revision($post_id);
+        // Reset state for subsequent saves in the same request.
+        MK_MCP_State_Manager::$meta_has_changed = false;
     }
 
     // Sync meta data to the latest revision.

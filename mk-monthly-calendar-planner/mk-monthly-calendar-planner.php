@@ -19,6 +19,14 @@ define( 'MK_MCP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MK_MCP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 /**
+ * Manages state across hooks during a request.
+ */
+final class MK_MCP_State_Manager {
+    public static $meta_has_changed = false;
+    private function __construct() {}
+}
+
+/**
  * Load plugin textdomain for translation.
  */
 function mk_mcp_load_textdomain() {
@@ -136,3 +144,66 @@ function mk_mcp_restore_revision_meta_data( $post_id, $revision_id ) {
 }
 add_action( 'wp_restore_post_revision', 'mk_mcp_restore_revision_meta_data', 10, 2 );
 
+/**
+ * Check if revisioned meta data has changed and set a flag.
+ * This allows the save_post hook to decide if a revision should be forced.
+ *
+ * @param array $data    An array of slashed post data.
+ * @param array $postarr An array of sanitized, but otherwise unmodified post data.
+ * @return array The original, unmodified post data.
+ */
+function mk_mcp_check_for_meta_change( $data, $postarr ) {
+    if ( !isset($postarr['ID']) || !in_array( $data['post_type'], ['monthly_calendar', 'mcp_template'] ) || (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) ) {
+        return $data;
+    }
+
+    $post_id = $postarr['ID'];
+    $post = get_post($post_id);
+    if ( ! wp_revisions_enabled( $post ) ) {
+        return $data;
+    }
+
+    $nonce_action = 'mcp_template' === $data['post_type'] ? 'mk_mcp_save_template_meta_box_data' : 'mk_mcp_save_meta_box_data';
+    $nonce_name = 'mcp_template' === $data['post_type'] ? 'mk_mcp_template_meta_box_nonce' : 'mk_mcp_meta_box_nonce';
+    if ( !isset($_POST[$nonce_name]) || !wp_verify_nonce($_POST[$nonce_name], $nonce_action) ) {
+        return $data;
+    }
+
+    $meta_keys = mk_mcp_get_revisioned_meta_keys();
+    foreach ($meta_keys as $meta_key) {
+        $old_value = get_post_meta($post_id, $meta_key, true);
+        $new_value_raw = null;
+
+        $post_key_map = [
+            '_mk_mcp_month'          => 'mk_mcp_month',
+            '_mk_mcp_year'           => 'mk_mcp_year',
+            '_mk_mcp_calendar_items' => 'mk_mcp_calendar_items_json',
+            '_mk_mcp_view_mode'      => 'mk_mcp_view_mode',
+            '_mk_mcp_column_count'   => 'mk_mcp_column_count',
+            '_mk_mcp_column_names'   => 'mk_mcp_column_names',
+            '_mk_mcp_item_title'     => 'mk_mcp_item_title',
+            '_mk_mcp_item_text'      => 'mk_mcp_item_text',
+        ];
+
+        if (!isset($post_key_map[$meta_key])) continue;
+
+        $post_key = $post_key_map[$meta_key];
+
+        if (isset($_POST[$post_key])) {
+            $new_value_raw = $_POST[$post_key];
+            if ($meta_key === '_mk_mcp_calendar_items') {
+                 $new_value_raw = wp_unslash($new_value_raw);
+            } elseif ($meta_key === '_mk_mcp_column_names' && is_array($new_value_raw)) {
+                 $new_value_raw = wp_json_encode(array_map('sanitize_text_field', $new_value_raw));
+            }
+        }
+
+        if ( (string) $old_value !== (string) $new_value_raw ) {
+            MK_MCP_State_Manager::$meta_has_changed = true;
+            break;
+        }
+    }
+
+    return $data;
+}
+add_filter( 'wp_insert_post_data', 'mk_mcp_check_for_meta_change', 10, 2 );

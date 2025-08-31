@@ -87,23 +87,6 @@ function mk_mcp_save_template_meta_box_data($post_id) {
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
     if (isset($_POST['post_type']) && 'mcp_template' == $_POST['post_type'] && !current_user_can('edit_post', $post_id)) return;
 
-    $post = get_post($post_id);
-    $meta_has_changed = false;
-
-    if (wp_revisions_enabled($post)) {
-        $meta_keys = ['_mk_mcp_item_title', '_mk_mcp_item_text'];
-        foreach ($meta_keys as $meta_key) {
-            $old_value = get_post_meta($post_id, $meta_key, true);
-            $post_key = str_replace('_mk_mcp_', 'mk_mcp_', $meta_key);
-            $new_value_raw = isset($_POST[$post_key]) ? $_POST[$post_key] : null;
-
-            if ( (string) $old_value !== (string) $new_value_raw ) {
-                $meta_has_changed = true;
-                break;
-            }
-        }
-    }
-
     if (isset($_POST['mk_mcp_item_title'])) {
         update_post_meta($post_id, '_mk_mcp_item_title', sanitize_text_field($_POST['mk_mcp_item_title']));
     }
@@ -111,9 +94,11 @@ function mk_mcp_save_template_meta_box_data($post_id) {
         update_post_meta($post_id, '_mk_mcp_item_text', sanitize_textarea_field($_POST['mk_mcp_item_text']));
     }
 
-    // If meta has changed, create a new revision.
-    if ($meta_has_changed) {
+    // If the dedicated meta check flagged a change, create a revision.
+    if ( MK_MCP_State_Manager::$meta_has_changed ) {
         wp_save_post_revision($post_id);
+        // Reset state for subsequent saves in the same request.
+        MK_MCP_State_Manager::$meta_has_changed = false;
     }
 
     // Sync meta data to the latest revision.
