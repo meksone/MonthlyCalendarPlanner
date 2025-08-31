@@ -53,6 +53,11 @@
     text-align: right;
 }
 
+/* Day name is hidden by default on larger screens */
+.mk-mcp-day-name {
+    display: none;
+}
+
 .mk-mcp-day-items-wrapper {
     flex-grow: 1;
 }
@@ -153,6 +158,9 @@
 
     /* Style day number as a header for the list item */
     .mk-mcp-day-number {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         text-align: left;
         background: #f7f7f7;
         padding: 10px 15px;
@@ -163,6 +171,15 @@
     }
      .mk-mcp-day:last-child .mk-mcp-day-number{
         border-bottom: none;
+    }
+
+    /* Display and style the day name on mobile */
+    .mk-mcp-day-name {
+        display: inline;
+        font-size: 0.9em;
+        font-weight: 400;
+        color: #555;
+        margin-left: 3px;
     }
 
     /* Add padding to the items wrapper instead of the day */
