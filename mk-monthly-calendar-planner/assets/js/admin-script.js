@@ -1,6 +1,6 @@
 /**
  * Admin script for Monthly Calendar Planner
- * @version 1.0.4
+ * @version 1.0.6
  */
 jQuery(document).ready(function($) {
     const builderContainer = $('#mk-mcp-builder-wrapper');
@@ -111,7 +111,7 @@ jQuery(document).ready(function($) {
         previousViewMode = $(this).val();
     }).on('change', function() {
         serializeData(); // Save data before showing confirm
-        modalOverlay.show();
+        modalOverlay.css('display', 'flex'); // Correctly use flex to center the modal
     });
 
     $('#mk-mcp-confirm-switch').on('click', function() {
@@ -139,3 +139,4 @@ jQuery(document).ready(function($) {
     // Initial load
     loadBuilderView();
 });
+
