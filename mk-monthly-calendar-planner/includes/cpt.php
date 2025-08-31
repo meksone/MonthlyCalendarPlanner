@@ -1,4 +1,8 @@
 <?php
+/**
+ * Custom Post Type registration for Monthly Calendar Planner
+ * @version 1.0.5
+ */
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -43,7 +47,7 @@ function mk_mcp_register_custom_post_type() {
         'label'                 => __( 'Monthly Calendar', 'mk-monthly-calendar-planner' ),
         'description'           => __( 'A post type for creating monthly calendars.', 'mk-monthly-calendar-planner' ),
         'labels'                => $labels,
-        'supports'              => array( 'title' ),
+        'supports'              => array( 'title', 'revisions' ),
         'hierarchical'          => false,
         'public'                => true,
         'show_ui'               => true,
