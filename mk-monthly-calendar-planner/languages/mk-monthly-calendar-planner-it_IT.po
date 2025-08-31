@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: mk-monthly-calendar-planner\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-31 16:57+0000\n"
-"PO-Revision-Date: 2025-08-31 19:13+0200\n"
+"PO-Revision-Date: 2025-08-31 20:06+0000\n"
 "Last-Translator: \n"
 "Language-Team: Italiano\n"
 "Language: it_IT\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 3.7\n"
+"X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.8.0; wp-6.8.2; php-8.3.6\n"
 "X-Domain: mk-monthly-calendar-planner\n"
 
@@ -21,7 +21,8 @@ msgstr "+"
 
 #. Description of the plugin
 msgid ""
-"A plugin to create and display monthly calendars with events using a shortcode."
+"A plugin to create and display monthly calendars with events using a "
+"shortcode."
 msgstr ""
 "Un plugin per creare e visualizzare calendari mensili con eventi utilizzando "
 "uno shortcode."
@@ -292,7 +293,8 @@ msgstr "Questo è il contenuto testuale che verrà precompilato."
 
 #: includes/templates.php:72
 msgid "This is the title that will be pre-populated when you use the template."
-msgstr "Questo è il titolo che verrà precompilato quando si utilizza il modello."
+msgstr ""
+"Questo è il titolo che verrà precompilato quando si utilizza il modello."
 
 #: includes/meta-boxes.php:158
 msgid "Thu"
