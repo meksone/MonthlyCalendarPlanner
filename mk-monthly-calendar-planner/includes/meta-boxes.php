@@ -81,8 +81,9 @@ function mk_mcp_render_meta_box_content($post) {
         </div>
 
         <div id="mk-mcp-builder-container">
-             <div class="mk-mcp-loader"><p><?php _e('Loading View...', 'mk-monthly-calendar-planner'); ?></p></div>
-             <div id="mk-mcp-builder-wrapper"></div>
+             <div id="mk-mcp-builder-wrapper">
+                <div class="mk-mcp-loader"><p><?php _e('Loading View...', 'mk-monthly-calendar-planner'); ?></p></div>
+             </div>
         </div>
         
         <input type="hidden" name="mk_mcp_calendar_items_json" id="mk_mcp_calendar_items_json" value="<?php echo esc_attr($calendar_items); ?>" />
