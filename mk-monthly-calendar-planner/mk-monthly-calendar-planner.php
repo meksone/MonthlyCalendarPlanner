@@ -19,14 +19,6 @@ define( 'MK_MCP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MK_MCP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 /**
- * Manages state across hooks during a request.
- */
-final class MK_MCP_State_Manager {
-    public static $meta_has_changed = false;
-    private function __construct() {}
-}
-
-/**
  * Load plugin textdomain for translation.
  */
 function mk_mcp_load_textdomain() {
@@ -97,30 +89,6 @@ function mk_mcp_get_revisioned_meta_keys() {
 }
 
 /**
- * Sync meta data for a post to its latest revision.
- *
- * @param int $post_id The ID of the post.
- */
-function mk_mcp_sync_meta_to_latest_revision( $post_id ) {
-    $revisions = wp_get_post_revisions( $post_id );
-    if ( ! empty( $revisions ) ) {
-        $latest_revision = array_shift( $revisions );
-        $revision_id     = $latest_revision->ID;
-
-        $meta_keys = mk_mcp_get_revisioned_meta_keys();
-        foreach ( $meta_keys as $meta_key ) {
-            $meta_value = get_post_meta( $post_id, $meta_key, true );
-            if ( false !== $meta_value ) {
-                update_metadata( 'post', $revision_id, $meta_key, $meta_value );
-            } else {
-                // Also sync deleted meta fields
-                delete_metadata( 'post', $revision_id, $meta_key );
-            }
-        }
-    }
-}
-
-/**
  * Restore meta data when a revision is restored.
  *
  * @param int $post_id     The ID of the main post.
@@ -145,28 +113,41 @@ function mk_mcp_restore_revision_meta_data( $post_id, $revision_id ) {
 add_action( 'wp_restore_post_revision', 'mk_mcp_restore_revision_meta_data', 10, 2 );
 
 /**
- * Check if revisioned meta data has changed and set a flag.
- * This allows the save_post hook to decide if a revision should be forced.
+ * Sync meta data for a post to its latest revision.
  *
- * @param array $data    An array of slashed post data.
- * @param array $postarr An array of sanitized, but otherwise unmodified post data.
- * @return array The original, unmodified post data.
+ * @param int $post_id The ID of the post.
  */
-function mk_mcp_check_for_meta_change( $data, $postarr ) {
-    if ( !isset($postarr['ID']) || !in_array( $data['post_type'], ['monthly_calendar', 'mcp_template'] ) || (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) ) {
-        return $data;
-    }
+function mk_mcp_sync_meta_to_latest_revision( $post_id ) {
+    $revisions = wp_get_post_revisions( $post_id );
+    if ( ! empty( $revisions ) ) {
+        $latest_revision = array_shift( $revisions );
+        $revision_id     = $latest_revision->ID;
 
-    $post_id = $postarr['ID'];
-    $post = get_post($post_id);
-    if ( ! wp_revisions_enabled( $post ) ) {
-        return $data;
+        $meta_keys = mk_mcp_get_revisioned_meta_keys();
+        foreach ( $meta_keys as $meta_key ) {
+            $meta_value = get_post_meta( $post_id, $meta_key, true );
+            if ( false !== $meta_value ) {
+                update_metadata( 'post', $revision_id, $meta_key, $meta_value );
+            } else {
+                // Also sync deleted meta fields
+                delete_metadata( 'post', $revision_id, $meta_key );
+            }
+        }
     }
+}
 
-    $nonce_action = 'mcp_template' === $data['post_type'] ? 'mk_mcp_save_template_meta_box_data' : 'mk_mcp_save_meta_box_data';
-    $nonce_name = 'mcp_template' === $data['post_type'] ? 'mk_mcp_template_meta_box_nonce' : 'mk_mcp_meta_box_nonce';
+/**
+ * Checks if any of the revisioned meta fields have changed.
+ *
+ * @param int $post_id The ID of the post being saved.
+ * @return bool True if meta has changed, false otherwise.
+ */
+function mk_mcp_meta_has_changed( $post_id ) {
+    // Nonce must be verified, as this check runs inside a filter triggered by WP core.
+    $nonce_action = 'mcp_template' === get_post_type($post_id) ? 'mk_mcp_save_template_meta_box_data' : 'mk_mcp_save_meta_box_data';
+    $nonce_name   = 'mcp_template' === get_post_type($post_id) ? 'mk_mcp_template_meta_box_nonce' : 'mk_mcp_meta_box_nonce';
     if ( !isset($_POST[$nonce_name]) || !wp_verify_nonce($_POST[$nonce_name], $nonce_action) ) {
-        return $data;
+        return false;
     }
 
     $meta_keys = mk_mcp_get_revisioned_meta_keys();
@@ -199,11 +180,30 @@ function mk_mcp_check_for_meta_change( $data, $postarr ) {
         }
 
         if ( (string) $old_value !== (string) $new_value_raw ) {
-            MK_MCP_State_Manager::$meta_has_changed = true;
-            break;
+            return true; // Found a change
         }
     }
 
-    return $data;
+    return false; // No changes found
 }
-add_filter( 'wp_insert_post_data', 'mk_mcp_check_for_meta_change', 10, 2 );
+
+/**
+ * Filters whether a post has changed to force a revision on meta change.
+ *
+ * @param bool    $post_has_changed Whether the post has changed.
+ * @param WP_Post $last_revision  The last revision post object.
+ * @param WP_Post $post           The post object.
+ * @return bool
+ */
+function mk_mcp_filter_revision_has_changed($post_has_changed, $last_revision, $post) {
+    if ( !in_array( $post->post_type, ['monthly_calendar', 'mcp_template'] ) ) {
+        return $post_has_changed;
+    }
+
+    if ( $post_has_changed ) {
+        return true;
+    }
+
+    return mk_mcp_meta_has_changed($post->ID);
+}
+add_filter('wp_save_post_revision_post_has_changed', 'mk_mcp_filter_revision_has_changed', 10, 3);

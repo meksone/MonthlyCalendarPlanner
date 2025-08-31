@@ -121,24 +121,17 @@ function mk_mcp_save_meta_box_data($post_id) {
     }
 
     if (isset($_POST['mk_mcp_calendar_items_json'])) {
-        $json_data = wp_unslash($_POST['mk_mcp_calendar_items_json']);
+        $json_data = stripslashes($_POST['mk_mcp_calendar_items_json']);
         $data = json_decode($json_data, true);
         if (json_last_error() === JSON_ERROR_NONE) {
             update_post_meta($post_id, '_mk_mcp_calendar_items', wp_json_encode($data));
         }
     }
 
-    // If the dedicated meta check flagged a change, create a revision.
-    if ( MK_MCP_State_Manager::$meta_has_changed ) {
-        wp_save_post_revision($post_id);
-        // Reset state for subsequent saves in the same request.
-        MK_MCP_State_Manager::$meta_has_changed = false;
-    }
-
     // Sync meta data to the latest revision.
     mk_mcp_sync_meta_to_latest_revision($post_id);
 }
-add_action('save_post_monthly_calendar', 'mk_mcp_save_meta_box_data', 10, 1);
+add_action('save_post_monthly_calendar', 'mk_mcp_save_meta_box_data');
 
 
 function mk_mcp_convert_data_to_v2_format($items) {
@@ -159,14 +152,14 @@ function mk_mcp_get_admin_builder_view() {
     $month = isset($_POST['month']) ? intval($_POST['month']) : 0;
     $year = isset($_POST['year']) ? intval($_POST['year']) : 0;
     $view_mode = isset($_POST['view_mode']) ? sanitize_text_field($_POST['view_mode']) : 'calendar';
-    $items_json = isset($_POST['items']) ? wp_unslash($_POST['items']) : '[]';
+    $items_json = isset($_POST['items']) ? stripslashes($_POST['items']) : '[]';
     $items_data = json_decode($items_json, true);
     $items_data = mk_mcp_convert_data_to_v2_format($items_data);
     if (!$month || !$year) wp_send_json_error('Invalid month or year.');
     ob_start();
     if ($view_mode === 'table') {
         $column_count = isset($_POST['column_count']) ? intval($_POST['column_count']) : 4;
-        $column_names_json = isset($_POST['column_names']) ? wp_unslash($_POST['column_names']) : '[]';
+        $column_names_json = isset($_POST['column_names']) ? stripslashes($_POST['column_names']) : '[]';
         $column_names = json_decode($column_names_json, true);
         mk_mcp_render_table_grid_admin($month, $year, $items_data, $column_count, $column_names);
     } else {

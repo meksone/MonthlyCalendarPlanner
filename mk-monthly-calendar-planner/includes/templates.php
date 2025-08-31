@@ -94,15 +94,8 @@ function mk_mcp_save_template_meta_box_data($post_id) {
         update_post_meta($post_id, '_mk_mcp_item_text', sanitize_textarea_field($_POST['mk_mcp_item_text']));
     }
 
-    // If the dedicated meta check flagged a change, create a revision.
-    if ( MK_MCP_State_Manager::$meta_has_changed ) {
-        wp_save_post_revision($post_id);
-        // Reset state for subsequent saves in the same request.
-        MK_MCP_State_Manager::$meta_has_changed = false;
-    }
-
     // Sync meta data to the latest revision.
     mk_mcp_sync_meta_to_latest_revision($post_id);
 }
-add_action('save_post_mcp_template', 'mk_mcp_save_template_meta_box_data', 10, 1);
+add_action('save_post_mcp_template', 'mk_mcp_save_template_meta_box_data');
 
