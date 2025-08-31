@@ -190,8 +190,14 @@ function mk_mcp_render_calendar_grid($month, $year, $items = [], $is_admin = fal
 
     // Days of the month
     for ($day_num = 1; $day_num <= $num_days_in_month; $day_num++) {
+        $timestamp = mktime(0, 0, 0, $month, $day_num, $year);
+        $day_name = date_i18n('l', $timestamp); // Get the full day name, localized
+
         echo '<div class="mk-mcp-day" data-day="' . esc_attr($day_num) . '">';
-        echo '<div class="mk-mcp-day-number">' . esc_html($day_num) . '</div>';
+        echo '<div class="mk-mcp-day-number">';
+        echo esc_html($day_num);
+        echo '<span class="mk-mcp-day-name">' . esc_html($day_name) . '</span>';
+        echo '</div>';
         
         echo '<div class="mk-mcp-day-items-wrapper">'; // This wrapper will be the sortable container
         
@@ -235,3 +241,4 @@ function mk_mcp_render_calendar_grid($month, $year, $items = [], $is_admin = fal
 
     echo '</div>'; // .mk-mcp-calendar-grid
 }
+
