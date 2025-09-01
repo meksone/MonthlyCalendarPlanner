@@ -1,6 +1,6 @@
 /**
  * Admin Styles for Monthly Calendar Planner
- * @version 1.0.6
+ * @version 1.1.0
  */
 
 /* General Meta Box Styling */
@@ -244,3 +244,13 @@
     padding-top: 15px;
 }
 
+/* Shortcode input in admin list table */
+.mk-mcp-shortcode-input {
+    width: 100%;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    color: #555;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 3px;
+}

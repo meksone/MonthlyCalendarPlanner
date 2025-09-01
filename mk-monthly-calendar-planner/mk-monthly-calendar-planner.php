@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       mk-monthly-calendar-planner
  * Description:       A plugin to create and display monthly calendars with events using a shortcode.
- * Version:           1.0.7
+ * Version:           1.1.0
  * Author:            meksONE
  * Author URI:        https://meksone.com/
  * Text Domain:       mk-monthly-calendar-planner
@@ -14,7 +14,7 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-define( 'MK_MCP_VERSION', '1.0.7' );
+define( 'MK_MCP_VERSION', '1.1.0' );
 define( 'MK_MCP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MK_MCP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -32,6 +32,8 @@ require_once MK_MCP_PLUGIN_DIR . 'includes/cpt.php';
 require_once MK_MCP_PLUGIN_DIR . 'includes/meta-boxes.php';
 require_once MK_MCP_PLUGIN_DIR . 'includes/shortcode.php';
 require_once MK_MCP_PLUGIN_DIR . 'includes/templates.php';
+require_once MK_MCP_PLUGIN_DIR . 'includes/admin-settings.php';
+require_once MK_MCP_PLUGIN_DIR . 'includes/admin-actions.php';
 
 /**
  * Enqueue scripts and styles for the admin area.
@@ -57,14 +59,93 @@ function mk_mcp_admin_enqueue_scripts($hook) {
             )
         ));
     }
+
+    // Enqueue color picker for our settings page
+    if ('monthly_calendar_page_mk-mcp-settings' == $hook) {
+        wp_enqueue_style('wp-color-picker');
+        wp_enqueue_style('mk-mcp-admin-settings-style', MK_MCP_PLUGIN_URL . 'assets/css/admin-settings.css', [], MK_MCP_VERSION);
+        wp_enqueue_script('mk-mcp-settings-script', MK_MCP_PLUGIN_URL . 'assets/js/admin-settings.js', ['wp-color-picker'], MK_MCP_VERSION, true);
+    }
 }
 add_action( 'admin_enqueue_scripts', 'mk_mcp_admin_enqueue_scripts' );
+
+/**
+ * Generates dynamic CSS based on user settings.
+ *
+ * @return string The generated CSS.
+ */
+function mk_mcp_generate_dynamic_css() {
+    $options = get_option('mk_mcp_style_settings', mk_mcp_get_default_style_settings());
+    if (empty($options)) { return ''; }
+
+    $css = '';
+    $mobile_css = '';
+
+    // --- Helper functions ---
+    $border_generator = function($prefix, $selector) use ($options, &$css) {
+        if (!empty($options[$prefix])) { $css .= "$selector { border: " . esc_attr($options[$prefix]) . "; }\n"; }
+        foreach (['top', 'right', 'bottom', 'left'] as $side) {
+            $key = $prefix . '_' . $side;
+            if (!empty($options[$key])) { $css .= "$selector { border-$side: " . esc_attr($options[$key]) . "; }\n"; }
+        }
+    };
+    $padding_generator = function($prefix, $selector) use ($options, &$css) {
+        foreach (['top', 'right', 'bottom', 'left'] as $side) {
+            $key = $prefix . '_' . $side;
+            if (isset($options[$key]) && $options[$key] !== '') { $css .= "$selector { padding-$side: " . absint($options[$key]) . "px; }\n"; }
+        }
+    };
+    $font_size_generator = function($id, $selector) use ($options, &$css, &$mobile_css) {
+        if (!empty($options[$id])) { $css .= "$selector { font-size: " . absint($options[$id]) . "px; }\n"; }
+        if (!empty($options[$id . '_mobile'])) { $mobile_css .= "$selector { font-size: " . absint($options[$id . '_mobile']) . "px; }\n"; }
+    };
+
+    // --- CSS Generation ---
+    // General View
+    if (empty($options['show_calendar_title'])) { $css .= ".mk-mcp-calendar-title { display: none; }\n"; }
+    $border_generator('main_border', '.mk-mcp-calendar-grid');
+    if (!empty($options['day_bg_color'])) { $css .= ".mk-mcp-day { background-color: " . esc_attr($options['day_bg_color']) . "; }\n"; }
+    $padding_generator('day_padding', '.mk-mcp-day');
+    if (isset($options['day_margin']) && $options['day_margin'] !== '') { $css .= ".mk-mcp-calendar-grid { gap: " . absint($options['day_margin']) . "px; }\n"; }
+    $font_size_generator('day_header_font_size', '.mk-mcp-day-header');
+    $font_size_generator('day_number_font_size', '.mk-mcp-day-number');
+    $font_size_generator('day_name_font_size', '.mk-mcp-day-name');
+
+    // Table View
+    if (!empty($options['table_header_bg_color'])) { $css .= ".mk-mcp-table-day-header { background-color: " . esc_attr($options['table_header_bg_color']) . "; }\n"; }
+    $padding_generator('table_header_padding', '.mk-mcp-table-day-header');
+    $border_generator('table_header_border', '.mk-mcp-table-day-header');
+    $font_size_generator('table_header_font_size', '.mk-mcp-table-day-header h3');
+    $font_size_generator('table_col_header_font_size', '.mk-mcp-table-col-header');
+
+    // Items
+    if (!empty($options['item_bg_color'])) { $css .= ".mk-mcp-item { background-color: " . esc_attr($options['item_bg_color']) . "; }\n"; }
+    $border_generator('item_border', '.mk-mcp-item');
+    $padding_generator('item_padding', '.mk-mcp-item');
+    if (isset($options['item_margin']) && $options['item_margin'] !== '') { $css .= ".mk-mcp-item { margin-bottom: " . absint($options['item_margin']) . "px; }\n"; }
+    $font_size_generator('item_title_font_size', '.mk-mcp-item .mk-mcp-item-title');
+    $font_size_generator('item_text_font_size', '.mk-mcp-item .mk-mcp-item-text');
+    if (!empty($options['item_text_color'])) { $css .= ".mk-mcp-item, .mk-mcp-item .mk-mcp-item-title { color: " . esc_attr($options['item_text_color']) . "; }\n"; }
+    if (!empty($options['item_font_family'])) { $css .= ".mk-mcp-frontend-calendar-wrapper { font-family: " . esc_attr($options['item_font_family']) . "; }\n"; }
+
+    // Combine with mobile styles
+    if (!empty($mobile_css)) {
+        $css .= "\n@media (max-width: 782px) {\n" . $mobile_css . "}\n";
+    }
+
+    return $css;
+}
 
 /**
  * Enqueue scripts and styles for the frontend.
  */
 function mk_mcp_frontend_enqueue_scripts() {
     wp_enqueue_style('mk-mcp-frontend-style', MK_MCP_PLUGIN_URL . 'assets/css/frontend-style.css', array(), MK_MCP_VERSION, 'all');
+
+    $dynamic_css = mk_mcp_generate_dynamic_css();
+    if (!empty($dynamic_css)) {
+        wp_add_inline_style('mk-mcp-frontend-style', $dynamic_css);
+    }
 }
 add_action( 'wp_enqueue_scripts', 'mk_mcp_frontend_enqueue_scripts' );
 
@@ -113,32 +194,44 @@ function mk_mcp_restore_revision_meta_data( $post_id, $revision_id ) {
 add_action( 'wp_restore_post_revision', 'mk_mcp_restore_revision_meta_data', 10, 2 );
 
 /**
- * Force a revision to be created if meta data has changed.
+ * Sync meta data for a post to its latest revision.
  *
- * @param array $data    An array of slashed post data.
- * @param array $postarr An array of sanitized, but otherwise unmodified post data.
- * @return array The filtered post data.
+ * @param int $post_id The ID of the post.
  */
-function mk_mcp_force_revision_on_meta_change( $data, $postarr ) {
-    if ( !isset($postarr['ID']) || !in_array( $data['post_type'], ['monthly_calendar', 'mcp_template'] ) || (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) ) {
-        return $data;
-    }
-    
-    $post_id = $postarr['ID'];
-    $post = get_post($post_id);
-    if ( ! wp_revisions_enabled( $post ) ) {
-        return $data;
-    }
+function mk_mcp_sync_meta_to_latest_revision( $post_id ) {
+    $revisions = wp_get_post_revisions( $post_id );
+    if ( ! empty( $revisions ) ) {
+        $latest_revision = array_shift( $revisions );
+        $revision_id     = $latest_revision->ID;
 
-    $nonce_action = 'mcp_template' === $data['post_type'] ? 'mk_mcp_save_template_meta_box_data' : 'mk_mcp_save_meta_box_data';
-    $nonce_name = 'mcp_template' === $data['post_type'] ? 'mk_mcp_template_meta_box_nonce' : 'mk_mcp_meta_box_nonce';
+        $meta_keys = mk_mcp_get_revisioned_meta_keys();
+        foreach ( $meta_keys as $meta_key ) {
+            $meta_value = get_post_meta( $post_id, $meta_key, true );
+            if ( false !== $meta_value ) {
+                update_metadata( 'post', $revision_id, $meta_key, $meta_value );
+            } else {
+                // Also sync deleted meta fields
+                delete_metadata( 'post', $revision_id, $meta_key );
+            }
+        }
+    }
+}
+
+/**
+ * Checks if any of the revisioned meta fields have changed.
+ *
+ * @param int $post_id The ID of the post being saved.
+ * @return bool True if meta has changed, false otherwise.
+ */
+function mk_mcp_meta_has_changed( $post_id ) {
+    // Nonce must be verified, as this check runs inside a filter triggered by WP core.
+    $nonce_action = 'mcp_template' === get_post_type($post_id) ? 'mk_mcp_save_template_meta_box_data' : 'mk_mcp_save_meta_box_data';
+    $nonce_name   = 'mcp_template' === get_post_type($post_id) ? 'mk_mcp_template_meta_box_nonce' : 'mk_mcp_meta_box_nonce';
     if ( !isset($_POST[$nonce_name]) || !wp_verify_nonce($_POST[$nonce_name], $nonce_action) ) {
-        return $data;
+        return false;
     }
 
-    $meta_has_changed = false;
     $meta_keys = mk_mcp_get_revisioned_meta_keys();
-
     foreach ($meta_keys as $meta_key) {
         $old_value = get_post_meta($post_id, $meta_key, true);
         $new_value_raw = null;
@@ -155,29 +248,43 @@ function mk_mcp_force_revision_on_meta_change( $data, $postarr ) {
         ];
 
         if (!isset($post_key_map[$meta_key])) continue;
-        
+
         $post_key = $post_key_map[$meta_key];
-        
+
         if (isset($_POST[$post_key])) {
             $new_value_raw = $_POST[$post_key];
             if ($meta_key === '_mk_mcp_calendar_items') {
-                 $new_value_raw = stripslashes($new_value_raw);
+                 $new_value_raw = wp_unslash($new_value_raw);
             } elseif ($meta_key === '_mk_mcp_column_names' && is_array($new_value_raw)) {
                  $new_value_raw = wp_json_encode(array_map('sanitize_text_field', $new_value_raw));
             }
         }
-        
+
         if ( (string) $old_value !== (string) $new_value_raw ) {
-            $meta_has_changed = true;
-            break;
+            return true; // Found a change
         }
     }
 
-    if ( $meta_has_changed ) {
-        $data['post_content'] = $data['post_content'] . '<!-- ' . rand() . ' -->';
+    return false; // No changes found
+}
+
+/**
+ * Filters whether a post has changed to force a revision on meta change.
+ *
+ * @param bool    $post_has_changed Whether the post has changed.
+ * @param WP_Post $last_revision  The last revision post object.
+ * @param WP_Post $post           The post object.
+ * @return bool
+ */
+function mk_mcp_filter_revision_has_changed($post_has_changed, $last_revision, $post) {
+    if ( !in_array( $post->post_type, ['monthly_calendar', 'mcp_template'] ) ) {
+        return $post_has_changed;
     }
 
-    return $data;
-}
-add_filter( 'wp_insert_post_data', 'mk_mcp_force_revision_on_meta_change', 99, 2 );
+    if ( $post_has_changed ) {
+        return true;
+    }
 
+    return mk_mcp_meta_has_changed($post->ID);
+}
+add_filter('wp_save_post_revision_post_has_changed', 'mk_mcp_filter_revision_has_changed', 10, 3);

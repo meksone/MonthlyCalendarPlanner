@@ -1,6 +1,6 @@
 /**
  * Admin script for Monthly Calendar Planner
- * @version 1.0.6
+ * @version 1.1.0
  */
 jQuery(document).ready(function($) {
     const builderContainer = $('#mk-mcp-builder-wrapper');
@@ -83,16 +83,18 @@ jQuery(document).ready(function($) {
         });
     }
     
+    const generateUniqueId = () => 'item-' + Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+
     const getNewItemHtml = (title = "New Item", text = "") => {
         const escTitle = $('<div/>').text(title).html();
         const escText = $('<div/>').text(text).html();
         return `
-            <div class="mk-mcp-item" data-id="${new Date().getTime()}">
+            <div class="mk-mcp-item" data-id="${generateUniqueId()}">
                 <div class="mk-mcp-item-header">
                     <span class="mk-mcp-item-title-preview">${escTitle}</span>
                     <div class="mk-mcp-item-actions"><button type="button" class="mk-mcp-duplicate-item">D</button><button type="button" class="mk-mcp-delete-item">X</button></div>
                 </div>
-                <div class="mk-mcp-item-content" style="display: block;"><input type="text" class="mk-mcp-item-title" placeholder="Title" value="${escTitle}"><textarea class="mk-mcp-item-text" placeholder="Text">${escText}</textarea></div>
+                <div class="mk-mcp-item-content" style="display: none;"><input type="text" class="mk-mcp-item-title" placeholder="Title" value="${escTitle}"><textarea class="mk-mcp-item-text" placeholder="Text">${escText}</textarea></div>
             </div>`;
     };
     
@@ -127,7 +129,7 @@ jQuery(document).ready(function($) {
     builderContainer.on('click', '.mk-mcp-add-item-btn', function() { $(this).siblings('.mk-mcp-day-items-wrapper').append(getNewItemHtml()); serializeData(); });
     builderContainer.on('click', '.mk-mcp-add-item-btn-table', function() { $(this).before(getNewItemHtml()); serializeData(); });
     builderContainer.on('click', '.mk-mcp-delete-item', function() { if (confirm(mk_mcp_ajax.i18n.delete_confirm)) { $(this).closest('.mk-mcp-item').remove(); serializeData(); } });
-    builderContainer.on('click', '.mk-mcp-duplicate-item', function() { const o = $(this).closest('.mk-mcp-item'); const c = o.clone(); c.attr('data-id', new Date().getTime()); o.after(c); serializeData(); });
+    builderContainer.on('click', '.mk-mcp-duplicate-item', function() { const o = $(this).closest('.mk-mcp-item'); const c = o.clone(); c.attr('data-id', generateUniqueId()); o.after(c); serializeData(); });
     builderContainer.on('click', '.mk-mcp-item-header', function(e) { if (!$(e.target).is('button')) $(this).siblings('.mk-mcp-item-content').slideToggle(200); });
     builderContainer.on('keyup change', '.mk-mcp-item-title, .mk-mcp-item-text', function(){
         if($(this).hasClass('mk-mcp-item-title')){
@@ -138,5 +140,26 @@ jQuery(document).ready(function($) {
 
     // Initial load
     loadBuilderView();
+
+    // Click-to-copy for shortcode input
+    $(document).on('click', '.mk-mcp-shortcode-input', function(e) {
+        e.preventDefault();
+        this.select();
+
+        try {
+            // Use modern clipboard API if available for a more reliable copy
+            navigator.clipboard.writeText(this.value).then(() => {
+                const original_value = this.value;
+                this.value = 'Copied!';
+                setTimeout(() => { this.value = original_value; }, 1200);
+            }).catch(() => {
+                // Fallback for browsers where clipboard API fails
+                document.execCommand('copy');
+            });
+        } catch (err) {
+            // Fallback for very old browsers
+            document.execCommand('copy');
+        }
+    });
 });
 

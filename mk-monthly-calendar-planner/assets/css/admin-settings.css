@@ -1,0 +1,69 @@
+/**
+ * Styles for the MK Monthly Calendar Planner settings page.
+ * @version 1.1.0
+ */
+
+.mk-mcp-settings-wrap .form-table {
+    table-layout: fixed;
+}
+
+.mk-mcp-settings-wrap .form-table th {
+    width: 250px;
+    padding-left: 0;
+}
+
+.mk-mcp-settings-wrap .form-table td {
+    padding: 15px 10px;
+}
+
+/* Wrapper for complex controls like border/padding */
+.border-controls-wrapper, .spacing-controls-wrapper, .font-size-controls-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    max-width: 600px;
+}
+
+/* Individual item inside a complex control */
+.border-control-item, .spacing-control-item, .font-size-control-item {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    align-items: center;
+    gap: 10px;
+}
+
+.border-control-item label, .spacing-control-item label, .font-size-control-item label {
+    font-style: italic;
+    color: #555;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+    padding-right: 10px;
+}
+
+/* Sticky Save Button */
+.mk-mcp-settings-header {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 32px; /* WP Admin Bar Height */
+    background: rgba(240, 246, 252, 0.95);
+    padding: 10px 20px;
+    margin: 0 -20px 20px;
+    z-index: 99;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #c3c4c7;
+}
+
+.mk-mcp-settings-header h1 {
+    margin: 0;
+}
+
+.mk-mcp-settings-header .button {
+    margin: 0;
+}

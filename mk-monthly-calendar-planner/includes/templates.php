@@ -1,7 +1,7 @@
 <?php
 /**
  * Item Templates for Monthly Calendar Planner
- * @version 1.0.7
+ * @version 1.1.0
  */
 
 // If this file is called directly, abort.
@@ -94,20 +94,8 @@ function mk_mcp_save_template_meta_box_data($post_id) {
         update_post_meta($post_id, '_mk_mcp_item_text', sanitize_textarea_field($_POST['mk_mcp_item_text']));
     }
 
-    // Now, sync this saved data with the latest revision.
-    $revisions = wp_get_post_revisions($post_id);
-    if (!empty($revisions)) {
-        $latest_revision = array_shift($revisions);
-        $revision_id = $latest_revision->ID;
-
-        $meta_keys = mk_mcp_get_revisioned_meta_keys();
-        foreach ($meta_keys as $meta_key) {
-            $meta_value = get_post_meta($post_id, $meta_key, true);
-            if (false !== $meta_value) {
-                update_metadata('post', $revision_id, $meta_key, $meta_value);
-            }
-        }
-    }
+    // Sync meta data to the latest revision.
+    mk_mcp_sync_meta_to_latest_revision($post_id);
 }
 add_action('save_post_mcp_template', 'mk_mcp_save_template_meta_box_data');
 
