@@ -491,3 +491,47 @@ msgstr ""
 #: includes/admin-actions.php:101
 msgid "Revisions deleted successfully."
 msgstr ""
+
+#: includes/admin-settings.php:237
+msgid "Border (shorthand)"
+msgstr ""
+
+#: includes/admin-settings.php:238
+msgid "Border Top"
+msgstr ""
+
+#: includes/admin-settings.php:239
+msgid "Border Right"
+msgstr ""
+
+#: includes/admin-settings.php:240
+msgid "Border Bottom"
+msgstr ""
+
+#: includes/admin-settings.php:241
+msgid "Border Left"
+msgstr ""
+
+#: includes/admin-settings.php:251
+msgid "Top"
+msgstr ""
+
+#: includes/admin-settings.php:251
+msgid "Right"
+msgstr ""
+
+#: includes/admin-settings.php:251
+msgid "Bottom"
+msgstr ""
+
+#: includes/admin-settings.php:251
+msgid "Left"
+msgstr ""
+
+#: includes/admin-settings.php:261
+msgid "Desktop"
+msgstr ""
+
+#: includes/admin-settings.php:262
+msgid "Mobile"
+msgstr ""

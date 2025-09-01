@@ -118,7 +118,14 @@ function mk_mcp_render_color_field($args) { $id = $args['id']; $value = mk_mcp_g
 function mk_mcp_render_checkbox_field($args) { $id = $args['id']; $checked = mk_mcp_get_setting($id); echo "<input type='checkbox' id='$id' name='mk_mcp_style_settings[$id]' value='1' " . checked(1, $checked, false) . " />"; }
 
 function mk_mcp_render_border_field($args) {
-    $id = $args['id']; $fields = [$id => 'Border (shorthand)', $id.'_top' => 'Border Top', $id.'_right' => 'Border Right', $id.'_bottom' => 'Border Bottom', $id.'_left' => 'Border Left'];
+    $id = $args['id'];
+    $fields = [
+        $id           => __('Border (shorthand)', 'mk-monthly-calendar-planner'),
+        $id . '_top'    => __('Border Top', 'mk-monthly-calendar-planner'),
+        $id . '_right'  => __('Border Right', 'mk-monthly-calendar-planner'),
+        $id . '_bottom' => __('Border Bottom', 'mk-monthly-calendar-planner'),
+        $id . '_left'   => __('Border Left', 'mk-monthly-calendar-planner')
+    ];
     echo '<div class="border-controls-wrapper">';
     foreach ($fields as $field_id => $label) {
         $value = mk_mcp_get_setting($field_id);
@@ -128,17 +135,22 @@ function mk_mcp_render_border_field($args) {
 }
 
 function mk_mcp_render_padding_field($args) {
-    $id = $args['id']; $sides = ['top', 'right', 'bottom', 'left'];
+    $id = $args['id'];
+    $sides = ['top', 'right', 'bottom', 'left'];
     echo '<div class="spacing-controls-wrapper">';
     foreach ($sides as $side) {
         $field_id = $id . '_' . $side; $value = mk_mcp_get_setting($field_id);
-        echo "<div class='spacing-control-item'><label for='{$field_id}'>" . ucfirst($side) . "</label><input type='number' id='{$field_id}' name='mk_mcp_style_settings[{$field_id}]' value='" . esc_attr($value) . "' class='small-text' /></div>";
+        echo "<div class='spacing-control-item'><label for='{$field_id}'>" . __(ucfirst($side), 'mk-monthly-calendar-planner') . "</label><input type='number' id='{$field_id}' name='mk_mcp_style_settings[{$field_id}]' value='" . esc_attr($value) . "' class='small-text' /></div>";
     }
     echo '</div>';
 }
 
 function mk_mcp_render_font_size_field($args) {
-    $id = $args['id']; $desktop_val = mk_mcp_get_setting($id); $mobile_val = mk_mcp_get_setting($id . '_mobile');
-    echo "<div class='font-size-controls-wrapper'><div class='font-size-control-item'><label for='{$id}'>Desktop</label><input type='number' id='{$id}' name='mk_mcp_style_settings[{$id}]' value='" . esc_attr($desktop_val) . "' class='small-text' /></div>";
-    echo "<div class='font-size-control-item'><label for='{$id}_mobile'>Mobile</label><input type='number' id='{$id}_mobile' name='mk_mcp_style_settings[{$id}_mobile]' value='" . esc_attr($mobile_val) . "' class='small-text' /></div></div>";
+    $id = $args['id'];
+    $desktop_val = mk_mcp_get_setting($id);
+    $mobile_val = mk_mcp_get_setting($id . '_mobile');
+    echo "<div class='font-size-controls-wrapper'>";
+    echo "<div class='font-size-control-item'><label for='{$id}'>" . __('Desktop', 'mk-monthly-calendar-planner') . "</label><input type='number' id='{$id}' name='mk_mcp_style_settings[{$id}]' value='" . esc_attr($desktop_val) . "' class='small-text' /></div>";
+    echo "<div class='font-size-control-item'><label for='{$id}_mobile'>" . __('Mobile', 'mk-monthly-calendar-planner') . "</label><input type='number' id='{$id}_mobile' name='mk_mcp_style_settings[{$id}_mobile]' value='" . esc_attr($mobile_val) . "' class='small-text' /></div>";
+    echo "</div>";
 }
