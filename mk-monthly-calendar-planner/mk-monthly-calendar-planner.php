@@ -76,13 +76,12 @@ add_action( 'admin_enqueue_scripts', 'mk_mcp_admin_enqueue_scripts' );
  */
 function mk_mcp_generate_dynamic_css() {
     $options = get_option('mk_mcp_style_settings', mk_mcp_get_default_style_settings());
-    if (empty($options)) {
-        return '';
-    }
+    if (empty($options)) { return ''; }
 
     $css = '';
+    $mobile_css = '';
 
-    // Helper for the new border fields
+    // --- Helper functions ---
     $border_generator = function($prefix, $selector) use ($options, &$css) {
         if (!empty($options[$prefix])) { $css .= "$selector { border: " . esc_attr($options[$prefix]) . "; }\n"; }
         foreach (['top', 'right', 'bottom', 'left'] as $side) {
@@ -90,40 +89,47 @@ function mk_mcp_generate_dynamic_css() {
             if (!empty($options[$key])) { $css .= "$selector { border-$side: " . esc_attr($options[$key]) . "; }\n"; }
         }
     };
-
-    // Helper for padding fields
     $padding_generator = function($prefix, $selector) use ($options, &$css) {
         foreach (['top', 'right', 'bottom', 'left'] as $side) {
             $key = $prefix . '_' . $side;
-            if (isset($options[$key]) && $options[$key] !== '') {
-                $css .= "$selector { padding-$side: " . absint($options[$key]) . "px; }\n";
-            }
+            if (isset($options[$key]) && $options[$key] !== '') { $css .= "$selector { padding-$side: " . absint($options[$key]) . "px; }\n"; }
         }
     };
+    $font_size_generator = function($id, $selector) use ($options, &$css, &$mobile_css) {
+        if (!empty($options[$id])) { $css .= "$selector { font-size: " . absint($options[$id]) . "px; }\n"; }
+        if (!empty($options[$id . '_mobile'])) { $mobile_css .= "$selector { font-size: " . absint($options[$id . '_mobile']) . "px; }\n"; }
+    };
 
+    // --- CSS Generation ---
     // General View
     $border_generator('main_border', '.mk-mcp-calendar-grid');
     if (!empty($options['day_bg_color'])) { $css .= ".mk-mcp-day { background-color: " . esc_attr($options['day_bg_color']) . "; }\n"; }
     $padding_generator('day_padding', '.mk-mcp-day');
     if (isset($options['day_margin']) && $options['day_margin'] !== '') { $css .= ".mk-mcp-calendar-grid { gap: " . absint($options['day_margin']) . "px; }\n"; }
-    if (!empty($options['day_header_font_size'])) { $css .= ".mk-mcp-day-header { font-size: " . absint($options['day_header_font_size']) . "px; }\n"; }
-    if (!empty($options['day_number_font_size'])) { $css .= ".mk-mcp-day-number { font-size: " . absint($options['day_number_font_size']) . "px; }\n"; }
-    if (!empty($options['day_name_font_size'])) { $css .= ".mk-mcp-day-name { font-size: " . absint($options['day_name_font_size']) . "px; }\n"; }
+    $font_size_generator('day_header_font_size', '.mk-mcp-day-header');
+    $font_size_generator('day_number_font_size', '.mk-mcp-day-number');
+    $font_size_generator('day_name_font_size', '.mk-mcp-day-name');
 
     // Table View
     if (!empty($options['table_header_bg_color'])) { $css .= ".mk-mcp-table-day-header { background-color: " . esc_attr($options['table_header_bg_color']) . "; }\n"; }
     $padding_generator('table_header_padding', '.mk-mcp-table-day-header');
     $border_generator('table_header_border', '.mk-mcp-table-day-header');
+    $font_size_generator('table_header_font_size', '.mk-mcp-table-day-header h3');
 
     // Items
     if (!empty($options['item_bg_color'])) { $css .= ".mk-mcp-item { background-color: " . esc_attr($options['item_bg_color']) . "; }\n"; }
     $border_generator('item_border', '.mk-mcp-item');
     $padding_generator('item_padding', '.mk-mcp-item');
     if (isset($options['item_margin']) && $options['item_margin'] !== '') { $css .= ".mk-mcp-item { margin-bottom: " . absint($options['item_margin']) . "px; }\n"; }
-    if (!empty($options['item_title_font_size'])) { $css .= ".mk-mcp-item .mk-mcp-item-title { font-size: " . absint($options['item_title_font_size']) . "px; }\n"; }
-    if (!empty($options['item_text_font_size'])) { $css .= ".mk-mcp-item .mk-mcp-item-text { font-size: " . absint($options['item_text_font_size']) . "px; }\n"; }
+    $font_size_generator('item_title_font_size', '.mk-mcp-item .mk-mcp-item-title');
+    $font_size_generator('item_text_font_size', '.mk-mcp-item .mk-mcp-item-text');
     if (!empty($options['item_text_color'])) { $css .= ".mk-mcp-item, .mk-mcp-item .mk-mcp-item-title { color: " . esc_attr($options['item_text_color']) . "; }\n"; }
     if (!empty($options['item_font_family'])) { $css .= ".mk-mcp-frontend-calendar-wrapper { font-family: " . esc_attr($options['item_font_family']) . "; }\n"; }
+
+    // Combine with mobile styles
+    if (!empty($mobile_css)) {
+        $css .= "\n@media (max-width: 782px) {\n" . $mobile_css . "}\n";
+    }
 
     return $css;
 }
