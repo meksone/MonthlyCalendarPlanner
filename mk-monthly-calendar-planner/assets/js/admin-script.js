@@ -1,6 +1,6 @@
 /**
  * Admin script for Monthly Calendar Planner
- * @version 1.0.7
+ * @version 1.1.0
  */
 jQuery(document).ready(function($) {
     const builderContainer = $('#mk-mcp-builder-wrapper');

@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       mk-monthly-calendar-planner
  * Description:       A plugin to create and display monthly calendars with events using a shortcode.
- * Version:           1.0.8
+ * Version:           1.1.0
  * Author:            meksONE
  * Author URI:        https://meksone.com/
  * Text Domain:       mk-monthly-calendar-planner
@@ -14,7 +14,7 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-define( 'MK_MCP_VERSION', '1.0.8' );
+define( 'MK_MCP_VERSION', '1.1.0' );
 define( 'MK_MCP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MK_MCP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 

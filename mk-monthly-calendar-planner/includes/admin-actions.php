@@ -1,7 +1,7 @@
 <?php
 /**
  * Admin Actions for Monthly Calendar Planner (Duplicate Post, Delete Revisions)
- * @version 1.0.8
+ * @version 1.1.0
  */
 
 // If this file is called directly, abort.

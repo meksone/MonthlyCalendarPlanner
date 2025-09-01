@@ -1,7 +1,7 @@
 <?php
 /**
  * Main Meta Box for Monthly Calendar Planner
- * @version 1.0.7
+ * @version 1.1.0
  */
 
 // If this file is called directly, abort.
