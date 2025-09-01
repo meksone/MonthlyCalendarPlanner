@@ -62,6 +62,7 @@ function mk_mcp_admin_enqueue_scripts($hook) {
     // Enqueue color picker for our settings page
     if ('monthly_calendar_page_mk-mcp-settings' == $hook) {
         wp_enqueue_style('wp-color-picker');
+        wp_enqueue_style('mk-mcp-admin-settings-style', MK_MCP_PLUGIN_URL . 'assets/css/admin-settings.css', [], MK_MCP_VERSION);
         wp_enqueue_script('mk-mcp-settings-script', MK_MCP_PLUGIN_URL . 'assets/js/admin-settings.js', ['wp-color-picker'], MK_MCP_VERSION, true);
     }
 }
@@ -73,38 +74,45 @@ add_action( 'admin_enqueue_scripts', 'mk_mcp_admin_enqueue_scripts' );
  * @return string The generated CSS.
  */
 function mk_mcp_generate_dynamic_css() {
-    $options = get_option('mk_mcp_style_settings');
+    $options = get_option('mk_mcp_style_settings', mk_mcp_get_default_style_settings());
     if (empty($options)) {
         return '';
     }
 
     $css = '';
 
-    // Helper for border styles
-    $border_css = function($prefix, $selector) use ($options, &$css) {
-        if (!empty($options[$prefix.'_width']) || !empty($options[$prefix.'_style']) || !empty($options[$prefix.'_color'])) {
-            $width = !empty($options[$prefix.'_width']) ? absint($options[$prefix.'_width']) . 'px' : '0';
-            $style = !empty($options[$prefix.'_style']) ? esc_attr($options[$prefix.'_style']) : 'none';
-            $color = !empty($options[$prefix.'_color']) ? esc_attr($options[$prefix.'_color']) : 'transparent';
-            $css .= "$selector { border: $width $style $color; }\n";
+    // Helper for the new border fields
+    $border_generator = function($prefix, $selector) use ($options, &$css) {
+        // Main border property
+        if (!empty($options[$prefix])) {
+            $css .= "$selector { border: " . esc_attr($options[$prefix]) . "; }\n";
+        }
+        // Overrides
+        foreach (['top', 'right', 'bottom', 'left'] as $side) {
+            $key = $prefix . '_' . $side;
+            if (!empty($options[$key])) {
+                $css .= "$selector { border-$side: " . esc_attr($options[$key]) . "; }\n";
+            }
         }
     };
 
     // General View
-    $border_css('main_border', '.mk-mcp-calendar-grid');
+    $border_generator('main_border', '.mk-mcp-calendar-grid');
     if (!empty($options['day_bg_color'])) { $css .= ".mk-mcp-day { background-color: " . esc_attr($options['day_bg_color']) . "; }\n"; }
-    if (!empty($options['day_padding'])) { $css .= ".mk-mcp-day { padding: " . absint($options['day_padding']) . "px; }\n"; }
+    if (isset($options['day_padding']) && $options['day_padding'] !== '') { $css .= ".mk-mcp-day { padding: " . absint($options['day_padding']) . "px; }\n"; }
     if (isset($options['day_margin']) && $options['day_margin'] !== '') { $css .= ".mk-mcp-calendar-grid { gap: " . absint($options['day_margin']) . "px; }\n"; }
 
     // Table View
     if (!empty($options['table_header_bg_color'])) { $css .= ".mk-mcp-table-day-header { background-color: " . esc_attr($options['table_header_bg_color']) . "; }\n"; }
-    if (!empty($options['table_header_padding'])) { $css .= ".mk-mcp-table-day-header { padding: " . absint($options['table_header_padding']) . "px; }\n"; }
+    if (isset($options['table_header_padding']) && $options['table_header_padding'] !== '') { $css .= ".mk-mcp-table-day-header { padding: " . absint($options['table_header_padding']) . "px; }\n"; }
     if (isset($options['table_header_margin']) && $options['table_header_margin'] !== '') { $css .= ".mk-mcp-table-day-row { margin-bottom: " . absint($options['table_header_margin']) . "px; }\n"; }
-    $border_css('table_header_border', '.mk-mcp-table-day-header');
+    $border_generator('table_header_border', '.mk-mcp-table-day-header');
 
     // Items
     if (!empty($options['item_bg_color'])) { $css .= ".mk-mcp-item { background-color: " . esc_attr($options['item_bg_color']) . "; }\n"; }
-    if (!empty($options['item_border'])) { $css .= ".mk-mcp-item { border: " . esc_attr($options['item_border']) . "; }\n"; }
+    $border_generator('item_border', '.mk-mcp-item');
+    if (isset($options['item_padding']) && $options['item_padding'] !== '') { $css .= ".mk-mcp-item { padding: " . absint($options['item_padding']) . "px; }\n"; }
+    if (isset($options['item_margin']) && $options['item_margin'] !== '') { $css .= ".mk-mcp-item { margin-bottom: " . absint($options['item_margin']) . "px; }\n"; }
     if (!empty($options['item_text_color'])) { $css .= ".mk-mcp-item, .mk-mcp-item .mk-mcp-item-title { color: " . esc_attr($options['item_text_color']) . "; }\n"; }
     if (!empty($options['item_font_family'])) { $css .= ".mk-mcp-frontend-calendar-wrapper { font-family: " . esc_attr($options['item_font_family']) . "; }\n"; }
 

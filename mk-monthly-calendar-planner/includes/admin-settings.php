@@ -16,22 +16,26 @@ if (!defined('WPINC')) {
  */
 function mk_mcp_get_default_style_settings() {
     return [
-        'main_border_width'         => '1',
-        'main_border_style'         => 'solid',
-        'main_border_color'         => '#e0e0e0',
-        'day_bg_color'              => '',
-        'day_padding'               => '10',
-        'day_margin'                => '1',
-        'table_header_bg_color'     => '#f5f5f5',
-        'table_header_padding'      => '10',
-        'table_header_margin'       => '20',
-        'table_header_border_width' => '0',
-        'table_header_border_style' => 'none',
-        'table_header_border_color' => '',
-        'item_bg_color'             => '#ffffff',
-        'item_border'               => '1px solid #e0e0e0', // Changed
-        'item_text_color'           => '#555555',
-        'item_font_family'          => '',
+        // General
+        'main_border'           => '1px solid #e0e0e0',
+        'main_border_top'       => '', 'main_border_right'     => '', 'main_border_bottom'     => '', 'main_border_left'     => '',
+        'day_bg_color'          => '',
+        'day_padding'           => '10',
+        'day_margin'            => '1',
+        // Table
+        'table_header_bg_color' => '#f5f5f5',
+        'table_header_padding'  => '10',
+        'table_header_margin'   => '20',
+        'table_header_border'   => '',
+        'table_header_border_top' => '', 'table_header_border_right' => '', 'table_header_border_bottom' => '', 'table_header_border_left' => '',
+        // Items
+        'item_bg_color'         => '#ffffff',
+        'item_border'           => '1px solid #e0e0e0',
+        'item_border_top'       => '', 'item_border_right'     => '', 'item_border_bottom'     => '', 'item_border_left'     => '',
+        'item_padding'          => '12',
+        'item_margin'           => '10',
+        'item_text_color'       => '#555555',
+        'item_font_family'      => '',
     ];
 }
 
@@ -56,7 +60,7 @@ add_action('admin_menu', 'mk_mcp_register_settings_page');
  */
 function mk_mcp_render_settings_page() {
     ?>
-    <div class="wrap">
+    <div class="wrap mk-mcp-settings-wrap">
         <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
         <form action="options.php" method="post">
             <?php
@@ -99,7 +103,9 @@ function mk_mcp_settings_api_init() {
     // --- Items Section ---
     add_settings_section('mk_mcp_section_items', __('Individual Calendar Items', 'mk-monthly-calendar-planner'), 'mk_mcp_section_items_callback', 'mk-mcp-settings');
     add_settings_field('item_bg_color', __('Item Background', 'mk-monthly-calendar-planner'), 'mk_mcp_render_color_field', 'mk-mcp-settings', 'mk_mcp_section_items', ['id' => 'item_bg_color']);
-    add_settings_field('item_border', __('Item Border CSS', 'mk-monthly-calendar-planner'), 'mk_mcp_render_text_field', 'mk-mcp-settings', 'mk_mcp_section_items', ['id' => 'item_border', 'placeholder' => 'e.g., 1px solid #000']); // Changed
+    add_settings_field('item_border', __('Item Border', 'mk-monthly-calendar-planner'), 'mk_mcp_render_border_field', 'mk-mcp-settings', 'mk_mcp_section_items', ['id' => 'item_border']);
+    add_settings_field('item_padding', __('Item Padding (px)', 'mk-monthly-calendar-planner'), 'mk_mcp_render_number_field', 'mk-mcp-settings', 'mk_mcp_section_items', ['id' => 'item_padding']);
+    add_settings_field('item_margin', __('Item Margin (px)', 'mk-monthly-calendar-planner'), 'mk_mcp_render_number_field', 'mk-mcp-settings', 'mk_mcp_section_items', ['id' => 'item_margin']);
     add_settings_field('item_text_color', __('Item Text Color', 'mk-monthly-calendar-planner'), 'mk_mcp_render_color_field', 'mk-mcp-settings', 'mk_mcp_section_items', ['id' => 'item_text_color']);
     add_settings_field('item_font_family', __('Item Font Family', 'mk-monthly-calendar-planner'), 'mk_mcp_render_text_field', 'mk-mcp-settings', 'mk_mcp_section_items', ['id' => 'item_font_family', 'placeholder' => 'e.g., Arial, sans-serif']);
 }
@@ -110,30 +116,23 @@ add_action('admin_init', 'mk_mcp_settings_api_init');
  */
 function mk_mcp_sanitize_style_settings($input) {
     $sanitized_input = [];
-    $allowed_border_styles = ['none', 'solid', 'dotted', 'dashed', 'double', 'groove', 'ridge', 'inset', 'outset'];
+    $defaults = mk_mcp_get_default_style_settings();
 
-    // General Settings
-    $sanitized_input['main_border_width'] = isset($input['main_border_width']) ? absint($input['main_border_width']) : '';
-    $sanitized_input['main_border_color'] = isset($input['main_border_color']) ? sanitize_hex_color($input['main_border_color']) : '';
-    if (isset($input['main_border_style']) && in_array($input['main_border_style'], $allowed_border_styles, true)) { $sanitized_input['main_border_style'] = $input['main_border_style']; }
+    foreach ($defaults as $key => $default_value) {
+        if (!isset($input[$key])) {
+            continue;
+        }
 
-    $sanitized_input['day_bg_color'] = isset($input['day_bg_color']) ? sanitize_hex_color($input['day_bg_color']) : '';
-    $sanitized_input['day_padding'] = isset($input['day_padding']) ? absint($input['day_padding']) : '';
-    $sanitized_input['day_margin'] = isset($input['day_margin']) ? absint($input['day_margin']) : '';
-
-    // Table Header Settings
-    $sanitized_input['table_header_bg_color'] = isset($input['table_header_bg_color']) ? sanitize_hex_color($input['table_header_bg_color']) : '';
-    $sanitized_input['table_header_padding'] = isset($input['table_header_padding']) ? absint($input['table_header_padding']) : '';
-    $sanitized_input['table_header_margin'] = isset($input['table_header_margin']) ? absint($input['table_header_margin']) : '';
-    $sanitized_input['table_header_border_width'] = isset($input['table_header_border_width']) ? absint($input['table_header_border_width']) : '';
-    $sanitized_input['table_header_border_color'] = isset($input['table_header_border_color']) ? sanitize_hex_color($input['table_header_border_color']) : '';
-    if (isset($input['table_header_border_style']) && in_array($input['table_header_border_style'], $allowed_border_styles, true)) { $sanitized_input['table_header_border_style'] = $input['table_header_border_style']; }
-
-    // Item Settings
-    $sanitized_input['item_bg_color'] = isset($input['item_bg_color']) ? sanitize_hex_color($input['item_bg_color']) : '';
-    $sanitized_input['item_border'] = isset($input['item_border']) ? wp_strip_all_tags($input['item_border']) : ''; // Changed
-    $sanitized_input['item_text_color'] = isset($input['item_text_color']) ? sanitize_hex_color($input['item_text_color']) : '';
-    $sanitized_input['item_font_family'] = isset($input['item_font_family']) ? sanitize_text_field($input['item_font_family']) : '';
+        if (strpos($key, '_color') !== false) {
+            $sanitized_input[$key] = sanitize_hex_color($input[$key]);
+        } elseif (strpos($key, '_padding') !== false || strpos($key, '_margin') !== false) {
+            $sanitized_input[$key] = isset($input[$key]) && $input[$key] !== '' ? absint($input[$key]) : '';
+        } elseif (strpos($key, 'border') !== false) {
+            $sanitized_input[$key] = wp_strip_all_tags($input[$key]);
+        } else {
+            $sanitized_input[$key] = sanitize_text_field($input[$key]);
+        }
+    }
 
     return $sanitized_input;
 }
@@ -145,9 +144,8 @@ function mk_mcp_section_items_callback() { echo '<p>' . __('Customize the indivi
 
 /* --- Field Render Callbacks --- */
 function mk_mcp_get_setting($id) {
-    $options = get_option('mk_mcp_style_settings');
-    $defaults = mk_mcp_get_default_style_settings();
-    return isset($options[$id]) ? $options[$id] : $defaults[$id];
+    $options = get_option('mk_mcp_style_settings', mk_mcp_get_default_style_settings());
+    return isset($options[$id]) ? $options[$id] : '';
 }
 
 function mk_mcp_render_text_field($args) {
@@ -171,18 +169,19 @@ function mk_mcp_render_color_field($args) {
 
 function mk_mcp_render_border_field($args) {
     $id = $args['id'];
+    $fields = [
+        $id           => 'Border (shorthand)',
+        $id . '_top'    => 'Border Top',
+        $id . '_right'  => 'Border Right',
+        $id . '_bottom' => 'Border Bottom',
+        $id . '_left'   => 'Border Left',
+    ];
 
-    $width = mk_mcp_get_setting($id.'_width');
-    $style = mk_mcp_get_setting($id.'_style');
-    $color = mk_mcp_get_setting($id.'_color');
-
-    $styles = ['none', 'solid', 'dotted', 'dashed', 'double', 'groove', 'ridge', 'inset', 'outset'];
-
-    echo "<input type='number' name='mk_mcp_style_settings[{$id}_width]' value='" . esc_attr($width) . "' class='small-text' placeholder='width (px)' />";
-    echo "<select name='mk_mcp_style_settings[{$id}_style]'>";
-    foreach ($styles as $s) {
-        echo "<option value='{$s}' " . selected($style, $s, false) . ">" . ucfirst($s) . "</option>";
+    echo '<div class="border-controls-wrapper">';
+    foreach ($fields as $field_id => $label) {
+        $value = mk_mcp_get_setting($field_id);
+        echo "<div class='border-control-item'><label for='{$field_id}'>{$label}</label>";
+        echo "<input type='text' id='{$field_id}' name='mk_mcp_style_settings[{$field_id}]' value='" . esc_attr($value) . "' class='regular-text' placeholder='e.g., 1px solid #000' /></div>";
     }
-    echo "</select>";
-    echo "<input type='text' name='mk_mcp_style_settings[{$id}_color]' value='" . esc_attr($color) . "' class='mk-mcp-color-picker' placeholder='color' />";
+    echo '</div>';
 }
