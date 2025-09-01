@@ -363,3 +363,131 @@ msgstr ""
 #: includes/meta-boxes.php:53
 msgid "Year"
 msgstr ""
+
+#: includes/admin-settings.php:48
+msgid "Calendar Styling"
+msgstr ""
+
+#: includes/admin-settings.php:49
+msgid "Styling"
+msgstr ""
+
+#: includes/admin-settings.php:64
+msgid "Save Settings"
+msgstr ""
+
+#: includes/admin-settings.php:140
+msgid "General View"
+msgstr ""
+
+#: includes/admin-settings.php:205
+msgid "Customize the main look of the calendar grid and day cells."
+msgstr ""
+
+#: includes/admin-settings.php:141
+msgid "Show Calendar Title"
+msgstr ""
+
+#: includes/admin-settings.php:144
+msgid "Day Cell Padding"
+msgstr ""
+
+#: includes/admin-settings.php:146
+msgid "Day Header Font Size (px)"
+msgstr ""
+
+#: includes/admin-settings.php:147
+msgid "Day Number Font Size (px)"
+msgstr ""
+
+#: includes/admin-settings.php:148
+msgid "Day Name Font Size (px)"
+msgstr ""
+
+#: includes/admin-settings.php:154
+msgid "Table View Only"
+msgstr ""
+
+#: includes/admin-settings.php:207
+msgid "Customize the headers for the table view."
+msgstr ""
+
+#: includes/admin-settings.php:157
+msgid "Column Header Padding"
+msgstr ""
+
+#: includes/admin-settings.php:159
+msgid "Table Day Header Font Size (px)"
+msgstr ""
+
+#: includes/admin-settings.php:160
+msgid "Table Column Header Font Size (px)"
+msgstr ""
+
+#: includes/admin-settings.php:163
+msgid "Individual Calendar Items"
+msgstr ""
+
+#: includes/admin-settings.php:209
+msgid "Customize the individual event items."
+msgstr ""
+
+#: includes/admin-settings.php:167
+msgid "Item Padding"
+msgstr ""
+
+#: includes/admin-settings.php:168
+msgid "Item Margin (px)"
+msgstr ""
+
+#: includes/admin-settings.php:169
+msgid "Item Title Font Size (px)"
+msgstr ""
+
+#: includes/admin-settings.php:170
+msgid "Item Text Font Size (px)"
+msgstr ""
+
+#: includes/admin-actions.php:26
+msgid "Duplicate this item"
+msgstr ""
+
+#: includes/admin-actions.php:26
+msgid "Duplicate"
+msgstr ""
+
+#: includes/admin-actions.php:49
+msgid "Security check failed."
+msgstr ""
+
+#: includes/admin-actions.php:52
+msgid "You do not have permission to duplicate this item."
+msgstr ""
+
+#: includes/admin-actions.php:60
+msgid "Copy of %s"
+msgstr ""
+
+#: includes/admin-actions.php:84
+msgid "Item duplicated successfully."
+msgstr ""
+
+#: includes/admin-actions.php:29
+msgid "Delete all revisions for this item"
+msgstr ""
+
+#: includes/admin-actions.php:30
+msgid "Delete Revisions"
+msgstr ""
+
+#: includes/admin-actions.php:29
+msgid "Are you sure you want to permanently delete all revisions for this item?"
+msgstr ""
+
+#: includes/admin-actions.php:91
+msgid "You do not have permission to delete revisions for this item."
+msgstr ""
+
+#: includes/admin-actions.php:101
+msgid "Revisions deleted successfully."
+msgstr ""

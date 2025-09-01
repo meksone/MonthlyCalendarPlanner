@@ -102,6 +102,7 @@ function mk_mcp_generate_dynamic_css() {
 
     // --- CSS Generation ---
     // General View
+    if (empty($options['show_calendar_title'])) { $css .= ".mk-mcp-calendar-title { display: none; }\n"; }
     $border_generator('main_border', '.mk-mcp-calendar-grid');
     if (!empty($options['day_bg_color'])) { $css .= ".mk-mcp-day { background-color: " . esc_attr($options['day_bg_color']) . "; }\n"; }
     $padding_generator('day_padding', '.mk-mcp-day');
@@ -115,6 +116,7 @@ function mk_mcp_generate_dynamic_css() {
     $padding_generator('table_header_padding', '.mk-mcp-table-day-header');
     $border_generator('table_header_border', '.mk-mcp-table-day-header');
     $font_size_generator('table_header_font_size', '.mk-mcp-table-day-header h3');
+    $font_size_generator('table_col_header_font_size', '.mk-mcp-table-col-header');
 
     // Items
     if (!empty($options['item_bg_color'])) { $css .= ".mk-mcp-item { background-color: " . esc_attr($options['item_bg_color']) . "; }\n"; }
