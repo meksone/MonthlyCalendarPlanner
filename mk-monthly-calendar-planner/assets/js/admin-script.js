@@ -140,5 +140,26 @@ jQuery(document).ready(function($) {
 
     // Initial load
     loadBuilderView();
+
+    // Click-to-copy for shortcode input
+    $(document).on('click', '.mk-mcp-shortcode-input', function(e) {
+        e.preventDefault();
+        this.select();
+
+        try {
+            // Use modern clipboard API if available for a more reliable copy
+            navigator.clipboard.writeText(this.value).then(() => {
+                const original_value = this.value;
+                this.value = 'Copied!';
+                setTimeout(() => { this.value = original_value; }, 1200);
+            }).catch(() => {
+                // Fallback for browsers where clipboard API fails
+                document.execCommand('copy');
+            });
+        } catch (err) {
+            // Fallback for very old browsers
+            document.execCommand('copy');
+        }
+    });
 });
 

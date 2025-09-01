@@ -67,3 +67,36 @@ function mk_mcp_register_custom_post_type() {
 
 }
 add_action( 'init', 'mk_mcp_register_custom_post_type', 0 );
+
+/**
+ * Add custom columns to the 'monthly_calendar' post type list table.
+ *
+ * @param array $columns The existing columns.
+ * @return array The modified columns.
+ */
+function mk_mcp_add_custom_columns($columns) {
+    // Add new column after the 'title' column
+    $new_columns = [];
+    foreach ($columns as $key => $title) {
+        $new_columns[$key] = $title;
+        if ($key === 'title') {
+            $new_columns['shortcode'] = __('Shortcode', 'mk-monthly-calendar-planner');
+        }
+    }
+    return $new_columns;
+}
+add_filter('manage_monthly_calendar_posts_columns', 'mk_mcp_add_custom_columns');
+
+/**
+ * Display content for the custom columns.
+ *
+ * @param string $column_name The name of the custom column.
+ * @param int    $post_id     The ID of the current post.
+ */
+function mk_mcp_render_custom_columns($column_name, $post_id) {
+    if ($column_name === 'shortcode') {
+        $shortcode = '[monthly_calendar id="' . $post_id . '"]';
+        echo '<input type="text" readonly="readonly" value="' . esc_attr($shortcode) . '" class="mk-mcp-shortcode-input" />';
+    }
+}
+add_action('manage_monthly_calendar_posts_custom_column', 'mk_mcp_render_custom_columns', 10, 2);
