@@ -3,9 +3,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mk-monthly-calendar-planner\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-31 16:57+0000\n"
+"POT-Creation-Date: 2025-09-01 16:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME EMAIL@ADDRESS\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
@@ -16,7 +16,7 @@ msgstr ""
 "X-Loco-Version: 2.8.0; wp-6.8.2; php-8.3.6\n"
 "X-Domain: mk-monthly-calendar-planner"
 
-#: includes/meta-boxes.php:193
+#: includes/meta-boxes.php:213
 msgid "+"
 msgstr ""
 
@@ -26,19 +26,19 @@ msgid ""
 "shortcode."
 msgstr ""
 
-#: includes/cpt.php:44
+#: includes/cpt.php:48
 msgid "A post type for creating monthly calendars."
 msgstr ""
 
-#: includes/meta-boxes.php:174
+#: includes/meta-boxes.php:194
 msgid "Add Item"
 msgstr ""
 
-#: includes/cpt.php:23
+#: includes/cpt.php:27
 msgid "Add New"
 msgstr ""
 
-#: includes/cpt.php:22
+#: includes/cpt.php:26
 msgid "Add New Calendar"
 msgstr ""
 
@@ -50,23 +50,48 @@ msgstr ""
 msgid "Add one?"
 msgstr ""
 
-#: includes/cpt.php:21
+#: includes/cpt.php:25
 msgid "All Calendars"
 msgstr ""
 
-#: mk-monthly-calendar-planner.php:83
+#: mk-monthly-calendar-planner.php:58
 msgid "Are you sure you want to delete this item?"
 msgstr ""
 
-#: includes/cpt.php:18
+#: includes/admin-actions.php:28
+msgid ""
+"Are you sure you want to permanently delete all revisions for this item?"
+msgstr ""
+
+#: includes/admin-settings.php:123
+msgid "Border (shorthand)"
+msgstr ""
+
+#: includes/admin-settings.php:126
+msgid "Border Bottom"
+msgstr ""
+
+#: includes/admin-settings.php:127
+msgid "Border Left"
+msgstr ""
+
+#: includes/admin-settings.php:125
+msgid "Border Right"
+msgstr ""
+
+#: includes/admin-settings.php:124
+msgid "Border Top"
+msgstr ""
+
+#: includes/cpt.php:22
 msgid "Calendar Archives"
 msgstr ""
 
-#: includes/cpt.php:19
+#: includes/cpt.php:23
 msgid "Calendar Attributes"
 msgstr ""
 
-#: includes/shortcode.php:43
+#: includes/shortcode.php:47
 msgid "Calendar is not configured correctly (missing month or year)."
 msgstr ""
 
@@ -74,39 +99,113 @@ msgstr ""
 msgid "Calendar Settings & Items"
 msgstr ""
 
+#: includes/admin-settings.php:43
+msgid "Calendar Styling"
+msgstr ""
+
 #: includes/meta-boxes.php:54
 msgid "Calendar View"
 msgstr ""
 
-#: includes/cpt.php:38
+#: includes/cpt.php:42
 msgid "Calendars list"
 msgstr ""
 
-#: includes/cpt.php:39
+#: includes/cpt.php:43
 msgid "Calendars list navigation"
 msgstr ""
 
-#: includes/meta-boxes.php:97 mk-monthly-calendar-planner.php:82
+#: mk-monthly-calendar-planner.php:57 includes/meta-boxes.php:91
 msgid "Cancel"
+msgstr ""
+
+#: includes/admin-settings.php:75
+msgid "Column Header Background"
+msgstr ""
+
+#: includes/admin-settings.php:77
+msgid "Column Header Border"
+msgstr ""
+
+#: includes/admin-settings.php:76
+msgid "Column Header Padding"
 msgstr ""
 
 #: includes/meta-boxes.php:56
 msgid "Column Names"
 msgstr ""
 
-#: includes/meta-boxes.php:184
+#: includes/admin-actions.php:48
+#, php-format
+msgid "Copy of %s"
+msgstr ""
+
+#: includes/admin-settings.php:110
+msgid "Customize the headers for the table view."
+msgstr ""
+
+#: includes/admin-settings.php:111
+msgid "Customize the individual event items."
+msgstr ""
+
+#: includes/admin-settings.php:109
+msgid "Customize the main look of the calendar grid and day cells."
+msgstr ""
+
+#: includes/meta-boxes.php:204
 msgid "Day"
 msgstr ""
 
-#: includes/meta-boxes.php:169 includes/meta-boxes.php:192
+#: includes/admin-settings.php:66
+msgid "Day Cell Background"
+msgstr ""
+
+#: includes/admin-settings.php:67
+msgid "Day Cell Padding"
+msgstr ""
+
+#: includes/admin-settings.php:68
+msgid "Day Cell Spacing (px)"
+msgstr ""
+
+#: includes/admin-settings.php:69
+msgid "Day Header Font Size (px)"
+msgstr ""
+
+#: includes/admin-settings.php:71
+msgid "Day Name Font Size (px)"
+msgstr ""
+
+#: includes/admin-settings.php:70
+msgid "Day Number Font Size (px)"
+msgstr ""
+
+#: includes/meta-boxes.php:189 includes/meta-boxes.php:212
 msgid "Delete"
 msgstr ""
 
-#: includes/meta-boxes.php:169 includes/meta-boxes.php:192
+#: includes/admin-actions.php:28
+msgid "Delete all revisions for this item"
+msgstr ""
+
+#: includes/admin-actions.php:28
+msgid "Delete Revisions"
+msgstr ""
+
+#: includes/admin-settings.php:153
+msgid "Desktop"
+msgstr ""
+
+#: includes/admin-actions.php:23 includes/meta-boxes.php:189
+#: includes/meta-boxes.php:212
 msgid "Duplicate"
 msgstr ""
 
-#: includes/cpt.php:25
+#: includes/admin-actions.php:23
+msgid "Duplicate this item"
+msgstr ""
+
+#: includes/cpt.php:29
 msgid "Edit Calendar"
 msgstr ""
 
@@ -118,28 +217,60 @@ msgstr ""
 msgid "Evening"
 msgstr ""
 
-#: includes/cpt.php:32
+#: includes/cpt.php:36
 msgid "Featured Image"
 msgstr ""
 
-#: includes/cpt.php:40
+#: includes/cpt.php:44
 msgid "Filter calendars list"
 msgstr ""
 
-#: includes/meta-boxes.php:158
+#: includes/meta-boxes.php:178
 msgid "Fri"
+msgstr ""
+
+#: includes/admin-settings.php:63
+msgid "General View"
 msgstr ""
 
 #. Author URI of the plugin
 msgid "https://meksone.com/"
 msgstr ""
 
-#: includes/cpt.php:36
+#: includes/admin-settings.php:82
+msgid "Individual Calendar Items"
+msgstr ""
+
+#: includes/cpt.php:40
 msgid "Insert into calendar"
 msgstr ""
 
-#: includes/shortcode.php:26
+#: includes/shortcode.php:30
 msgid "Invalid calendar ID provided."
+msgstr ""
+
+#: includes/admin-settings.php:83
+msgid "Item Background"
+msgstr ""
+
+#: includes/admin-settings.php:84
+msgid "Item Border"
+msgstr ""
+
+#: includes/admin-actions.php:95
+msgid "Item duplicated successfully."
+msgstr ""
+
+#: includes/admin-settings.php:90
+msgid "Item Font Family"
+msgstr ""
+
+#: includes/admin-settings.php:86
+msgid "Item Margin (px)"
+msgstr ""
+
+#: includes/admin-settings.php:85
+msgid "Item Padding"
 msgstr ""
 
 #: includes/meta-boxes.php:67
@@ -150,16 +281,32 @@ msgstr ""
 msgid "Item Text"
 msgstr ""
 
+#: includes/admin-settings.php:89
+msgid "Item Text Color"
+msgstr ""
+
+#: includes/admin-settings.php:88
+msgid "Item Text Font Size (px)"
+msgstr ""
+
 #: includes/templates.php:70
 msgid "Item Title"
 msgstr ""
 
-#: includes/meta-boxes.php:94
+#: includes/admin-settings.php:87
+msgid "Item Title Font Size (px)"
+msgstr ""
+
+#: includes/meta-boxes.php:87
 msgid "Layout Change Warning"
 msgstr ""
 
 #: includes/meta-boxes.php:62
 msgid "Loading View..."
+msgstr ""
+
+#: includes/admin-settings.php:65
+msgid "Main Border"
 msgstr ""
 
 #. Author of the plugin
@@ -170,7 +317,11 @@ msgstr ""
 msgid "mk-monthly-calendar-planner"
 msgstr ""
 
-#: includes/meta-boxes.php:158
+#: includes/admin-settings.php:154
+msgid "Mobile"
+msgstr ""
+
+#: includes/meta-boxes.php:178
 msgid "Mon"
 msgstr ""
 
@@ -178,11 +329,11 @@ msgstr ""
 msgid "Month"
 msgstr ""
 
-#: includes/cpt.php:17 includes/cpt.php:43
+#: includes/cpt.php:21 includes/cpt.php:47
 msgid "Monthly Calendar"
 msgstr ""
 
-#: includes/cpt.php:16
+#: includes/cpt.php:20
 msgid "Monthly Calendars"
 msgstr ""
 
@@ -190,7 +341,7 @@ msgstr ""
 msgid "Morning"
 msgstr ""
 
-#: includes/cpt.php:24
+#: includes/cpt.php:28
 msgid "New Calendar"
 msgstr ""
 
@@ -210,11 +361,11 @@ msgstr ""
 msgid "No templates found."
 msgstr ""
 
-#: includes/cpt.php:30
+#: includes/cpt.php:34
 msgid "Not found"
 msgstr ""
 
-#: includes/cpt.php:31
+#: includes/cpt.php:35
 msgid "Not found in Trash"
 msgstr ""
 
@@ -222,7 +373,7 @@ msgstr ""
 msgid "Number of Columns"
 msgstr ""
 
-#: includes/cpt.php:20
+#: includes/cpt.php:24
 msgid "Parent Calendar:"
 msgstr ""
 
@@ -230,7 +381,7 @@ msgstr ""
 msgid "Pause"
 msgstr ""
 
-#: includes/cpt.php:14
+#: includes/cpt.php:18
 msgctxt "Post Type General Name"
 msgid "Monthly Calendars"
 msgstr ""
@@ -240,7 +391,7 @@ msgctxt "Post Type General Name"
 msgid "Templates"
 msgstr ""
 
-#: includes/cpt.php:15
+#: includes/cpt.php:19
 msgctxt "Post Type Singular Name"
 msgid "Monthly Calendar"
 msgstr ""
@@ -250,19 +401,27 @@ msgctxt "Post Type Singular Name"
 msgid "Template"
 msgstr ""
 
-#: includes/meta-boxes.php:98 mk-monthly-calendar-planner.php:81
+#: mk-monthly-calendar-planner.php:56 includes/meta-boxes.php:92
 msgid "Proceed"
 msgstr ""
 
-#: includes/cpt.php:34
+#: includes/cpt.php:38
 msgid "Remove featured image"
 msgstr ""
 
-#: includes/meta-boxes.php:158
+#: includes/admin-actions.php:98
+msgid "Revisions deleted successfully."
+msgstr ""
+
+#: includes/meta-boxes.php:178
 msgid "Sat"
 msgstr ""
 
-#: includes/cpt.php:29
+#: includes/admin-settings.php:51
+msgid "Save Settings"
+msgstr ""
+
+#: includes/cpt.php:33
 msgid "Search Calendar"
 msgstr ""
 
@@ -270,22 +429,50 @@ msgstr ""
 msgid "Search Templates"
 msgstr ""
 
-#: includes/cpt.php:33
+#: includes/admin-actions.php:41 includes/admin-actions.php:72
+msgid "Security check failed."
+msgstr ""
+
+#: includes/cpt.php:37
 msgid "Set featured image"
 msgstr ""
 
-#: includes/meta-boxes.php:158
+#: includes/cpt.php:83
+msgid "Shortcode"
+msgstr ""
+
+#: includes/admin-settings.php:64
+msgid "Show Calendar Title"
+msgstr ""
+
+#: includes/admin-settings.php:43
+msgid "Styling"
+msgstr ""
+
+#: includes/meta-boxes.php:178
 msgid "Sun"
 msgstr ""
 
-#: includes/meta-boxes.php:95 mk-monthly-calendar-planner.php:80
+#: mk-monthly-calendar-planner.php:55 includes/meta-boxes.php:88
 msgid ""
 "Switching views may alter your item layout, as items from multiple columns "
 "will be merged into one. Do you want to proceed?"
 msgstr ""
 
+#: includes/admin-settings.php:79
+msgid "Table Column Header Font Size (px)"
+msgstr ""
+
+#: includes/admin-settings.php:78
+msgid "Table Day Header Font Size (px)"
+msgstr ""
+
 #: includes/meta-boxes.php:54
 msgid "Table View"
+msgstr ""
+
+#: includes/admin-settings.php:74
+msgid "Table View Only"
 msgstr ""
 
 #: includes/templates.php:28
@@ -300,7 +487,7 @@ msgstr ""
 msgid "Templates"
 msgstr ""
 
-#: includes/meta-boxes.php:169 includes/meta-boxes.php:192
+#: includes/meta-boxes.php:189 includes/meta-boxes.php:212
 msgid "Text"
 msgstr ""
 
@@ -316,35 +503,35 @@ msgstr ""
 msgid "This is the title that will be pre-populated when you use the template."
 msgstr ""
 
-#: includes/meta-boxes.php:158
+#: includes/meta-boxes.php:178
 msgid "Thu"
 msgstr ""
 
-#: includes/meta-boxes.php:169 includes/meta-boxes.php:192
+#: includes/meta-boxes.php:189 includes/meta-boxes.php:212
 msgid "Title"
 msgstr ""
 
-#: includes/meta-boxes.php:158
+#: includes/meta-boxes.php:178
 msgid "Tue"
 msgstr ""
 
-#: includes/cpt.php:26
+#: includes/cpt.php:30
 msgid "Update Calendar"
 msgstr ""
 
-#: includes/cpt.php:37
+#: includes/cpt.php:41
 msgid "Uploaded to this calendar"
 msgstr ""
 
-#: includes/cpt.php:35
+#: includes/cpt.php:39
 msgid "Use as featured image"
 msgstr ""
 
-#: includes/cpt.php:27
+#: includes/cpt.php:31
 msgid "View Calendar"
 msgstr ""
 
-#: includes/cpt.php:28
+#: includes/cpt.php:32
 msgid "View Calendars"
 msgstr ""
 
@@ -356,7 +543,7 @@ msgstr ""
 msgid "View Template"
 msgstr ""
 
-#: includes/meta-boxes.php:158
+#: includes/meta-boxes.php:178
 msgid "Wed"
 msgstr ""
 
@@ -364,174 +551,10 @@ msgstr ""
 msgid "Year"
 msgstr ""
 
-#: includes/admin-settings.php:48
-msgid "Calendar Styling"
-msgstr ""
-
-#: includes/admin-settings.php:49
-msgid "Styling"
-msgstr ""
-
-#: includes/admin-settings.php:64
-msgid "Save Settings"
-msgstr ""
-
-#: includes/admin-settings.php:140
-msgid "General View"
-msgstr ""
-
-#: includes/admin-settings.php:205
-msgid "Customize the main look of the calendar grid and day cells."
-msgstr ""
-
-#: includes/admin-settings.php:141
-msgid "Show Calendar Title"
-msgstr ""
-
-#: includes/admin-settings.php:144
-msgid "Day Cell Padding"
-msgstr ""
-
-#: includes/admin-settings.php:146
-msgid "Day Header Font Size (px)"
-msgstr ""
-
-#: includes/admin-settings.php:147
-msgid "Day Number Font Size (px)"
-msgstr ""
-
-#: includes/admin-settings.php:148
-msgid "Day Name Font Size (px)"
-msgstr ""
-
-#: includes/admin-settings.php:154
-msgid "Table View Only"
-msgstr ""
-
-#: includes/admin-settings.php:207
-msgid "Customize the headers for the table view."
-msgstr ""
-
-#: includes/admin-settings.php:157
-msgid "Column Header Padding"
-msgstr ""
-
-#: includes/admin-settings.php:159
-msgid "Table Day Header Font Size (px)"
-msgstr ""
-
-#: includes/admin-settings.php:160
-msgid "Table Column Header Font Size (px)"
-msgstr ""
-
-#: includes/admin-settings.php:163
-msgid "Individual Calendar Items"
-msgstr ""
-
-#: includes/admin-settings.php:209
-msgid "Customize the individual event items."
-msgstr ""
-
-#: includes/admin-settings.php:167
-msgid "Item Padding"
-msgstr ""
-
-#: includes/admin-settings.php:168
-msgid "Item Margin (px)"
-msgstr ""
-
-#: includes/admin-settings.php:169
-msgid "Item Title Font Size (px)"
-msgstr ""
-
-#: includes/admin-settings.php:170
-msgid "Item Text Font Size (px)"
-msgstr ""
-
-#: includes/admin-actions.php:26
-msgid "Duplicate this item"
-msgstr ""
-
-#: includes/admin-actions.php:26
-msgid "Duplicate"
-msgstr ""
-
-#: includes/admin-actions.php:49
-msgid "Security check failed."
-msgstr ""
-
-#: includes/admin-actions.php:52
-msgid "You do not have permission to duplicate this item."
-msgstr ""
-
-#: includes/admin-actions.php:60
-msgid "Copy of %s"
-msgstr ""
-
-#: includes/admin-actions.php:84
-msgid "Item duplicated successfully."
-msgstr ""
-
-#: includes/admin-actions.php:29
-msgid "Delete all revisions for this item"
-msgstr ""
-
-#: includes/admin-actions.php:30
-msgid "Delete Revisions"
-msgstr ""
-
-#: includes/admin-actions.php:29
-msgid "Are you sure you want to permanently delete all revisions for this item?"
-msgstr ""
-
-#: includes/admin-actions.php:91
+#: includes/admin-actions.php:75
 msgid "You do not have permission to delete revisions for this item."
 msgstr ""
 
-#: includes/admin-actions.php:101
-msgid "Revisions deleted successfully."
-msgstr ""
-
-#: includes/admin-settings.php:237
-msgid "Border (shorthand)"
-msgstr ""
-
-#: includes/admin-settings.php:238
-msgid "Border Top"
-msgstr ""
-
-#: includes/admin-settings.php:239
-msgid "Border Right"
-msgstr ""
-
-#: includes/admin-settings.php:240
-msgid "Border Bottom"
-msgstr ""
-
-#: includes/admin-settings.php:241
-msgid "Border Left"
-msgstr ""
-
-#: includes/admin-settings.php:251
-msgid "Top"
-msgstr ""
-
-#: includes/admin-settings.php:251
-msgid "Right"
-msgstr ""
-
-#: includes/admin-settings.php:251
-msgid "Bottom"
-msgstr ""
-
-#: includes/admin-settings.php:251
-msgid "Left"
-msgstr ""
-
-#: includes/admin-settings.php:261
-msgid "Desktop"
-msgstr ""
-
-#: includes/admin-settings.php:262
-msgid "Mobile"
+#: includes/admin-actions.php:44
+msgid "You do not have permission to duplicate this item."
 msgstr ""
