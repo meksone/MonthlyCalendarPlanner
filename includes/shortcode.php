@@ -49,7 +49,10 @@ function mk_mcp_register_shortcode( $atts ) {
 
     ob_start();
     ?>
-    <div class="mk-mcp-frontend-calendar-wrapper">
+    <div class="mk-mcp-frontend-calendar-wrapper" id="mk-mcp-calendar-<?php echo esc_attr($post_id); ?>">
+        <div class="mk-mcp-search-box-wrapper">
+            <input type="search" id="mk-mcp-search-input-<?php echo esc_attr($post_id); ?>" class="mk-mcp-search-input" placeholder="<?php _e('Search events...', 'mk-monthly-calendar-planner'); ?>">
+        </div>
         <h2 class="mk-mcp-calendar-title"><?php echo esc_html( get_the_title( $post_id ) ); ?></h2>
         <?php 
         if ($view_mode === 'table') {

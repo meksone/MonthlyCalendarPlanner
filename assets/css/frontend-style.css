@@ -95,6 +95,7 @@
 /* --- 3. Shared & Item Styles --- */
 
 .mk-mcp-item {
+    position: relative;
     background: #ffffff;
     border: 1px solid #e0e0e0;
     border-left: 5px solid #3498db;

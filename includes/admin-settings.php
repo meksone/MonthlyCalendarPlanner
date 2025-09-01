@@ -27,6 +27,7 @@ function mk_mcp_get_default_style_settings() {
         'table_header_border'   => '', 'table_header_border_top' => '', 'table_header_border_right' => '', 'table_header_border_bottom' => '', 'table_header_border_left' => '',
         'table_header_font_size' => '16', 'table_header_font_size_mobile' => '14',
         'table_col_header_font_size' => '14', 'table_col_header_font_size_mobile' => '12',
+        'table_row_spacing'     => '20',
         // Items
         'item_bg_color'         => '#ffffff',
         'item_border'           => '1px solid #e0e0e0', 'item_border_top' => '', 'item_border_right' => '', 'item_border_bottom' => '', 'item_border_left' => '',
@@ -36,6 +37,9 @@ function mk_mcp_get_default_style_settings() {
         'item_text_font_size' => '14', 'item_text_font_size_mobile' => '13',
         'item_text_color'       => '#555555',
         'item_font_family'      => '',
+        // Search
+        'search_highlight_color' => '#fffb00',
+        'search_highlight_opacity' => '0.4',
     ];
 }
 
@@ -77,6 +81,7 @@ function mk_mcp_settings_api_init() {
     add_settings_field('table_header_border', __('Column Header Border', 'mk-monthly-calendar-planner'), 'mk_mcp_render_border_field', 'mk-mcp-settings', 'mk_mcp_section_table', ['id' => 'table_header_border']);
     add_settings_field('table_header_font_size', __('Table Day Header Font Size (px)', 'mk-monthly-calendar-planner'), 'mk_mcp_render_font_size_field', 'mk-mcp-settings', 'mk_mcp_section_table', ['id' => 'table_header_font_size']);
     add_settings_field('table_col_header_font_size', __('Table Column Header Font Size (px)', 'mk-monthly-calendar-planner'), 'mk_mcp_render_font_size_field', 'mk-mcp-settings', 'mk_mcp_section_table', ['id' => 'table_col_header_font_size']);
+    add_settings_field('table_row_spacing', __('Table Row Spacing (px)', 'mk-monthly-calendar-planner'), 'mk_mcp_render_number_field', 'mk-mcp-settings', 'mk_mcp_section_table', ['id' => 'table_row_spacing']);
 
     // --- Items Section ---
     add_settings_section('mk_mcp_section_items', __('Individual Calendar Items', 'mk-monthly-calendar-planner'), 'mk_mcp_section_items_callback', 'mk-mcp-settings');
@@ -88,6 +93,11 @@ function mk_mcp_settings_api_init() {
     add_settings_field('item_text_font_size', __('Item Text Font Size (px)', 'mk-monthly-calendar-planner'), 'mk_mcp_render_font_size_field', 'mk-mcp-settings', 'mk_mcp_section_items', ['id' => 'item_text_font_size']);
     add_settings_field('item_text_color', __('Item Text Color', 'mk-monthly-calendar-planner'), 'mk_mcp_render_color_field', 'mk-mcp-settings', 'mk_mcp_section_items', ['id' => 'item_text_color']);
     add_settings_field('item_font_family', __('Item Font Family', 'mk-monthly-calendar-planner'), 'mk_mcp_render_text_field', 'mk-mcp-settings', 'mk_mcp_section_items', ['id' => 'item_font_family', 'placeholder' => 'e.g., Arial, sans-serif']);
+
+    // --- Search Section ---
+    add_settings_section('mk_mcp_section_search', __('Search Highlighting', 'mk-monthly-calendar-planner'), 'mk_mcp_section_search_callback', 'mk-mcp-settings');
+    add_settings_field('search_highlight_color', __('Highlight Color', 'mk-monthly-calendar-planner'), 'mk_mcp_render_color_field', 'mk-mcp-settings', 'mk_mcp_section_search', ['id' => 'search_highlight_color']);
+    add_settings_field('search_highlight_opacity', __('Highlight Opacity', 'mk-monthly-calendar-planner'), 'mk_mcp_render_opacity_field', 'mk-mcp-settings', 'mk_mcp_section_search', ['id' => 'search_highlight_opacity']);
 }
 add_action('admin_init', 'mk_mcp_settings_api_init');
 
@@ -96,8 +106,13 @@ function mk_mcp_sanitize_style_settings($input) {
     $sanitized_input = []; $defaults = mk_mcp_get_default_style_settings();
     foreach ($defaults as $key => $default_value) {
         if (!isset($input[$key]) && strpos($key, 'show_') === false) { continue; } // Checkboxes might not be set
-        if (strpos($key, '_color') !== false) { $sanitized_input[$key] = sanitize_hex_color($input[$key]); }
-        elseif (strpos($key, 'font_size') !== false || strpos($key, '_padding') !== false || strpos($key, '_margin') !== false) { $sanitized_input[$key] = isset($input[$key]) && $input[$key] !== '' ? absint($input[$key]) : ''; }
+
+        if ($key === 'search_highlight_opacity') {
+            $value = floatval($input[$key]);
+            $sanitized_input[$key] = max(0, min(1, $value)); // Clamp between 0 and 1
+        }
+        elseif (strpos($key, '_color') !== false) { $sanitized_input[$key] = sanitize_hex_color($input[$key]); }
+        elseif (strpos($key, 'font_size') !== false || strpos($key, '_padding') !== false || strpos($key, '_margin') !== false || strpos($key, '_spacing') !== false) { $sanitized_input[$key] = isset($input[$key]) && $input[$key] !== '' ? absint($input[$key]) : ''; }
         elseif (strpos($key, 'border') !== false) { $sanitized_input[$key] = wp_strip_all_tags($input[$key]); }
         elseif (strpos($key, 'show_') !== false) { $sanitized_input[$key] = isset($input[$key]) ? '1' : '0'; }
         else { $sanitized_input[$key] = sanitize_text_field($input[$key]); }
@@ -109,11 +124,13 @@ function mk_mcp_sanitize_style_settings($input) {
 function mk_mcp_section_general_callback() { echo '<p>' . __('Customize the main look of the calendar grid and day cells.', 'mk-monthly-calendar-planner') . '</p>'; }
 function mk_mcp_section_table_callback() { echo '<p>' . __('Customize the headers for the table view.', 'mk-monthly-calendar-planner') . '</p>'; }
 function mk_mcp_section_items_callback() { echo '<p>' . __('Customize the individual event items.', 'mk-monthly-calendar-planner') . '</p>'; }
+function mk_mcp_section_search_callback() { echo '<p>' . __('Settings for the live search feature.', 'mk-monthly-calendar-planner') . '</p>'; }
 
 /* --- Field Render Callbacks --- */
 function mk_mcp_get_setting($id) { $options = get_option('mk_mcp_style_settings', mk_mcp_get_default_style_settings()); return isset($options[$id]) ? $options[$id] : ''; }
 function mk_mcp_render_text_field($args) { $id = $args['id']; $value = mk_mcp_get_setting($id); $placeholder = isset($args['placeholder']) ? esc_attr($args['placeholder']) : ''; echo "<input type='text' id='$id' name='mk_mcp_style_settings[$id]' value='" . esc_attr($value) . "' placeholder='$placeholder' class='regular-text' />"; }
 function mk_mcp_render_number_field($args) { $id = $args['id']; $value = mk_mcp_get_setting($id); echo "<input type='number' id='$id' name='mk_mcp_style_settings[$id]' value='" . esc_attr($value) . "' class='small-text' />"; }
+function mk_mcp_render_opacity_field($args) { $id = $args['id']; $value = mk_mcp_get_setting($id); echo "<input type='number' id='$id' name='mk_mcp_style_settings[$id]' value='" . esc_attr($value) . "' class='small-text' min='0' max='1' step='0.1' />"; }
 function mk_mcp_render_color_field($args) { $id = $args['id']; $value = mk_mcp_get_setting($id); echo "<input type='text' id='$id' name='mk_mcp_style_settings[$id]' value='" . esc_attr($value) . "' class='mk-mcp-color-picker' />"; }
 function mk_mcp_render_checkbox_field($args) { $id = $args['id']; $checked = mk_mcp_get_setting($id); echo "<input type='checkbox' id='$id' name='mk_mcp_style_settings[$id]' value='1' " . checked(1, $checked, false) . " />"; }
 
