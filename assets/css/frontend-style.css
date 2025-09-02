@@ -18,6 +18,20 @@
     color: #333;
 }
 
+.mk-mcp-search-box-wrapper {
+    margin-bottom: 1.5em;
+    max-width: 400px;
+}
+
+.mk-mcp-search-input {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
 /* --- 1. Calendar View Styles --- */
 
 /* Calendar Grid - Desktop First */

@@ -28,9 +28,9 @@ add_action( 'plugins_loaded', 'mk_mcp_load_textdomain' );
 
 
 // Include required files
+require_once MK_MCP_PLUGIN_DIR . 'includes/frontend-rendering.php';
 require_once MK_MCP_PLUGIN_DIR . 'includes/cpt.php';
 require_once MK_MCP_PLUGIN_DIR . 'includes/meta-boxes.php';
-require_once MK_MCP_PLUGIN_DIR . 'includes/frontend-rendering.php';
 require_once MK_MCP_PLUGIN_DIR . 'includes/shortcode.php';
 require_once MK_MCP_PLUGIN_DIR . 'includes/templates.php';
 require_once MK_MCP_PLUGIN_DIR . 'includes/admin-settings.php';
@@ -96,6 +96,12 @@ function mk_mcp_generate_dynamic_css() {
             if (isset($options[$key]) && $options[$key] !== '') { $css .= "$selector { padding-$side: " . absint($options[$key]) . "px; }\n"; }
         }
     };
+    $margin_generator = function($prefix, $selector) use ($options, &$css) {
+        foreach (['top', 'right', 'bottom', 'left'] as $side) {
+            $key = $prefix . '_' . $side;
+            if (isset($options[$key]) && $options[$key] !== '') { $css .= "$selector { margin-$side: " . absint($options[$key]) . "px; }\n"; }
+        }
+    };
     $font_size_generator = function($id, $selector) use ($options, &$css, &$mobile_css) {
         if (!empty($options[$id])) { $css .= "$selector { font-size: " . absint($options[$id]) . "px; }\n"; }
         if (!empty($options[$id . '_mobile'])) { $mobile_css .= "$selector { font-size: " . absint($options[$id . '_mobile']) . "px; }\n"; }
@@ -129,6 +135,13 @@ function mk_mcp_generate_dynamic_css() {
     $font_size_generator('item_text_font_size', '.mk-mcp-item .mk-mcp-item-text');
     if (!empty($options['item_text_color'])) { $css .= ".mk-mcp-item, .mk-mcp-item .mk-mcp-item-title { color: " . esc_attr($options['item_text_color']) . "; }\n"; }
     if (!empty($options['item_font_family'])) { $css .= ".mk-mcp-frontend-calendar-wrapper { font-family: " . esc_attr($options['item_font_family']) . "; }\n"; }
+
+    // --- Search Input ---
+    $margin_generator('search_input_margin', '.mk-mcp-search-input');
+    $padding_generator('search_input_padding', '.mk-mcp-search-input');
+    if (!empty($options['search_input_border'])) { $css .= ".mk-mcp-search-input { border: " . esc_attr($options['search_input_border']) . "; }\n"; }
+    if (isset($options['search_input_border_radius']) && $options['search_input_border_radius'] !== '') { $css .= ".mk-mcp-search-input { border-radius: " . absint($options['search_input_border_radius']) . "px; }\n"; }
+    if (!empty($options['search_input_disable_focus_highlight'])) { $css .= ".mk-mcp-search-input:focus { outline: none; box-shadow: none; }\n"; }
 
     // --- Search Highlight ---
     if (!empty($options['search_highlight_color']) && isset($options['search_highlight_opacity'])) {
@@ -172,7 +185,6 @@ function mk_mcp_generate_dynamic_css() {
  */
 function mk_mcp_frontend_enqueue_scripts() {
     wp_enqueue_style('mk-mcp-frontend-style', MK_MCP_PLUGIN_URL . 'assets/css/frontend-style.css', array(), MK_MCP_VERSION, 'all');
-    wp_enqueue_script('mk-mcp-frontend-script', MK_MCP_PLUGIN_URL . 'assets/js/frontend-script.js', array(), MK_MCP_VERSION, true);
 
     $dynamic_css = mk_mcp_generate_dynamic_css();
     if (!empty($dynamic_css)) {

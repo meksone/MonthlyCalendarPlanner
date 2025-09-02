@@ -40,6 +40,11 @@ function mk_mcp_get_default_style_settings() {
         // Search
         'search_highlight_color' => '#fffb00',
         'search_highlight_opacity' => '0.4',
+        'search_input_padding_top' => '8', 'search_input_padding_right' => '8', 'search_input_padding_bottom' => '8', 'search_input_padding_left' => '8',
+        'search_input_margin_top' => '5', 'search_input_margin_right' => '5', 'search_input_margin_bottom' => '15', 'search_input_margin_left' => '0',
+        'search_input_border_radius' => '5',
+        'search_input_border' => '1px solid #cccccc',
+        'search_input_disable_focus_highlight' => '0',
     ];
 }
 
@@ -98,6 +103,11 @@ function mk_mcp_settings_api_init() {
     add_settings_section('mk_mcp_section_search', __('Search Highlighting', 'mk-monthly-calendar-planner'), 'mk_mcp_section_search_callback', 'mk-mcp-settings');
     add_settings_field('search_highlight_color', __('Highlight Color', 'mk-monthly-calendar-planner'), 'mk_mcp_render_color_field', 'mk-mcp-settings', 'mk_mcp_section_search', ['id' => 'search_highlight_color']);
     add_settings_field('search_highlight_opacity', __('Highlight Opacity', 'mk-monthly-calendar-planner'), 'mk_mcp_render_opacity_field', 'mk-mcp-settings', 'mk_mcp_section_search', ['id' => 'search_highlight_opacity']);
+    add_settings_field('search_input_margin', __('Search Field Margin', 'mk-monthly-calendar-planner'), 'mk_mcp_render_padding_field', 'mk-mcp-settings', 'mk_mcp_section_search', ['id' => 'search_input_margin']);
+    add_settings_field('search_input_padding', __('Search Field Padding', 'mk-monthly-calendar-planner'), 'mk_mcp_render_padding_field', 'mk-mcp-settings', 'mk_mcp_section_search', ['id' => 'search_input_padding']);
+    add_settings_field('search_input_border', __('Search Field Border', 'mk-monthly-calendar-planner'), 'mk_mcp_render_text_field', 'mk-mcp-settings', 'mk_mcp_section_search', ['id' => 'search_input_border', 'placeholder' => 'e.g., 1px solid #ccc']);
+    add_settings_field('search_input_border_radius', __('Search Field Border Radius (px)', 'mk-monthly-calendar-planner'), 'mk_mcp_render_number_field', 'mk-mcp-settings', 'mk_mcp_section_search', ['id' => 'search_input_border_radius']);
+    add_settings_field('search_input_disable_focus_highlight', __('Disable Search Focus Highlight', 'mk-monthly-calendar-planner'), 'mk_mcp_render_checkbox_field', 'mk-mcp-settings', 'mk_mcp_section_search', ['id' => 'search_input_disable_focus_highlight']);
 }
 add_action('admin_init', 'mk_mcp_settings_api_init');
 
@@ -112,9 +122,9 @@ function mk_mcp_sanitize_style_settings($input) {
             $sanitized_input[$key] = max(0, min(1, $value)); // Clamp between 0 and 1
         }
         elseif (strpos($key, '_color') !== false) { $sanitized_input[$key] = sanitize_hex_color($input[$key]); }
-        elseif (strpos($key, 'font_size') !== false || strpos($key, '_padding') !== false || strpos($key, '_margin') !== false || strpos($key, '_spacing') !== false) { $sanitized_input[$key] = isset($input[$key]) && $input[$key] !== '' ? absint($input[$key]) : ''; }
+        elseif (strpos($key, 'font_size') !== false || strpos($key, '_padding') !== false || strpos($key, '_margin') !== false || strpos($key, '_spacing') !== false || strpos($key, '_radius') !== false) { $sanitized_input[$key] = isset($input[$key]) && $input[$key] !== '' ? absint($input[$key]) : ''; }
         elseif (strpos($key, 'border') !== false) { $sanitized_input[$key] = wp_strip_all_tags($input[$key]); }
-        elseif (strpos($key, 'show_') !== false) { $sanitized_input[$key] = isset($input[$key]) ? '1' : '0'; }
+        elseif (strpos($key, 'show_') !== false || strpos($key, 'disable_') !== false) { $sanitized_input[$key] = isset($input[$key]) ? '1' : '0'; }
         else { $sanitized_input[$key] = sanitize_text_field($input[$key]); }
     }
     return $sanitized_input;
