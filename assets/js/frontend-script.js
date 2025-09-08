@@ -3,7 +3,8 @@
  * @version 1.1.0
  */
 document.addEventListener('DOMContentLoaded', function() {
-    const searchInputs = document.querySelectorAll('.mk-mcp-search-input');
+    const searchInputSelector = '.mk-mcp-search-input';
+    const searchInputs = document.querySelectorAll(searchInputSelector);
 
     searchInputs.forEach(function(searchInput) {
         searchInput.addEventListener('input', function(e) {
