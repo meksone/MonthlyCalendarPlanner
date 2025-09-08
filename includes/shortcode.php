@@ -30,6 +30,9 @@ function mk_mcp_register_shortcode( $atts ) {
         return '<p>' . __( 'Invalid calendar ID provided.', 'mk-monthly-calendar-planner' ) . '</p>';
     }
     
+    // Enqueue the script only when the shortcode is used
+    wp_enqueue_script('mk-mcp-frontend-script', MK_MCP_PLUGIN_URL . 'assets/js/frontend-script.js', array(), MK_MCP_VERSION, true);
+
     // Check post status
     if (get_post_status($post_id) !== 'publish' && !current_user_can('edit_post', $post_id)) {
         return ''; // Don't show non-published calendars to public
@@ -49,7 +52,10 @@ function mk_mcp_register_shortcode( $atts ) {
 
     ob_start();
     ?>
-    <div class="mk-mcp-frontend-calendar-wrapper">
+    <div class="mk-mcp-frontend-calendar-wrapper" id="mk-mcp-calendar-<?php echo esc_attr($post_id); ?>">
+        <div class="mk-mcp-search-box-wrapper">
+            <input type="search" id="mk-mcp-search-input-<?php echo esc_attr($post_id); ?>" class="mk-mcp-search-input" placeholder="<?php _e('Search events...', 'mk-monthly-calendar-planner'); ?>">
+        </div>
         <h2 class="mk-mcp-calendar-title"><?php echo esc_html( get_the_title( $post_id ) ); ?></h2>
         <?php 
         if ($view_mode === 'table') {

@@ -28,6 +28,7 @@ add_action( 'plugins_loaded', 'mk_mcp_load_textdomain' );
 
 
 // Include required files
+require_once MK_MCP_PLUGIN_DIR . 'includes/frontend-rendering.php';
 require_once MK_MCP_PLUGIN_DIR . 'includes/cpt.php';
 require_once MK_MCP_PLUGIN_DIR . 'includes/meta-boxes.php';
 require_once MK_MCP_PLUGIN_DIR . 'includes/shortcode.php';
@@ -95,6 +96,12 @@ function mk_mcp_generate_dynamic_css() {
             if (isset($options[$key]) && $options[$key] !== '') { $css .= "$selector { padding-$side: " . absint($options[$key]) . "px; }\n"; }
         }
     };
+    $margin_generator = function($prefix, $selector) use ($options, &$css) {
+        foreach (['top', 'right', 'bottom', 'left'] as $side) {
+            $key = $prefix . '_' . $side;
+            if (isset($options[$key]) && $options[$key] !== '') { $css .= "$selector { margin-$side: " . absint($options[$key]) . "px; }\n"; }
+        }
+    };
     $font_size_generator = function($id, $selector) use ($options, &$css, &$mobile_css) {
         if (!empty($options[$id])) { $css .= "$selector { font-size: " . absint($options[$id]) . "px; }\n"; }
         if (!empty($options[$id . '_mobile'])) { $mobile_css .= "$selector { font-size: " . absint($options[$id . '_mobile']) . "px; }\n"; }
@@ -117,6 +124,7 @@ function mk_mcp_generate_dynamic_css() {
     $border_generator('table_header_border', '.mk-mcp-table-day-header');
     $font_size_generator('table_header_font_size', '.mk-mcp-table-day-header h3');
     $font_size_generator('table_col_header_font_size', '.mk-mcp-table-col-header');
+    if (isset($options['table_row_spacing']) && $options['table_row_spacing'] !== '') { $css .= ".mk-mcp-table-day-row { margin-bottom: " . absint($options['table_row_spacing']) . "px; }\n"; }
 
     // Items
     if (!empty($options['item_bg_color'])) { $css .= ".mk-mcp-item { background-color: " . esc_attr($options['item_bg_color']) . "; }\n"; }
@@ -127,6 +135,42 @@ function mk_mcp_generate_dynamic_css() {
     $font_size_generator('item_text_font_size', '.mk-mcp-item .mk-mcp-item-text');
     if (!empty($options['item_text_color'])) { $css .= ".mk-mcp-item, .mk-mcp-item .mk-mcp-item-title { color: " . esc_attr($options['item_text_color']) . "; }\n"; }
     if (!empty($options['item_font_family'])) { $css .= ".mk-mcp-frontend-calendar-wrapper { font-family: " . esc_attr($options['item_font_family']) . "; }\n"; }
+
+    // --- Search Input ---
+    $margin_generator('search_input_margin', '.mk-mcp-search-input');
+    $padding_generator('search_input_padding', '.mk-mcp-search-input');
+    if (!empty($options['search_input_border'])) { $css .= ".mk-mcp-search-input { border: " . esc_attr($options['search_input_border']) . "; }\n"; }
+    if (isset($options['search_input_border_radius']) && $options['search_input_border_radius'] !== '') { $css .= ".mk-mcp-search-input { border-radius: " . absint($options['search_input_border_radius']) . "px; }\n"; }
+    if (!empty($options['search_input_disable_focus_highlight'])) { $css .= ".mk-mcp-search-input:focus { outline: none; box-shadow: none; }\n"; }
+
+    // --- Search Highlight ---
+    if (!empty($options['search_highlight_color']) && isset($options['search_highlight_opacity'])) {
+        // Helper to convert hex to rgb
+        $hex_to_rgb = function($hex) {
+            $hex = str_replace('#', '', $hex);
+            if (strlen($hex) == 3) {
+                $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
+                $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
+                $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
+            } else {
+                $r = hexdec(substr($hex, 0, 2));
+                $g = hexdec(substr($hex, 2, 2));
+                $b = hexdec(substr($hex, 4, 2));
+            }
+            return "$r, $g, $b";
+        };
+        $rgb_color = $hex_to_rgb($options['search_highlight_color']);
+        $opacity = floatval($options['search_highlight_opacity']);
+
+        $css .= ".mk-mcp-item.highlighted::after {\n";
+        $css .= "    content: '';\n";
+        $css .= "    position: absolute;\n";
+        $css .= "    top: 0; left: 0; right: 0; bottom: 0;\n";
+        $css .= "    background-color: rgba(" . $rgb_color . ", " . $opacity . ");\n";
+        $css .= "    pointer-events: none;\n";
+        $css .= "    border-radius: 4px;\n";
+        $css .= "}\n";
+    }
 
     // Combine with mobile styles
     if (!empty($mobile_css)) {
